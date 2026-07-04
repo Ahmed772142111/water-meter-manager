@@ -63,6 +63,20 @@ export default function TabLayout() {
           tabBarIcon: ({ color }) => <IconSymbol size={28} name="doc.fill" color={color} />,
         }}
       />
+      <Tabs.Screen
+        name="payments"
+        options={{
+          title: "المدفوعات",
+          tabBarIcon: ({ color }) => <IconSymbol size={28} name="creditcard.fill" color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="reports"
+        options={{
+          title: "التقارير",
+          tabBarIcon: ({ color }) => <IconSymbol size={28} name="chart.bar.fill" color={color} />,
+        }}
+      />
     </Tabs>
   );
 }
