@@ -2,23 +2,26 @@ import { z } from "zod";
 import { router, protectedProcedure, publicProcedure } from "./_core/trpc";
 import * as db from "./db";
 
+const DEFAULT_USER_ID = 1; // Default user ID for unauthenticated requests
+
 export const appRouter = router({
   // Health check
   health: publicProcedure.query(() => ({ status: "ok" })),
 
   // ============= UNITS ROUTES =============
   units: router({
-    list: protectedProcedure.query(({ ctx }) => {
-      return db.getUserUnits(ctx.user.id);
+    list: publicProcedure.query(({ ctx }) => {
+      const userId = ctx.user?.id || DEFAULT_USER_ID;
+      return db.getUserUnits(userId);
     }),
 
-    getById: protectedProcedure
+    getById: publicProcedure
       .input(z.object({ id: z.number() }))
       .query(({ input }) => {
         return db.getUnitById(input.id);
       }),
 
-    create: protectedProcedure
+    create: publicProcedure
       .input(
         z.object({
           unitNumber: z.string().min(1),
@@ -30,13 +33,14 @@ export const appRouter = router({
         })
       )
       .mutation(({ ctx, input }) => {
+        const userId = ctx.user?.id || DEFAULT_USER_ID;
         return db.createUnit({
-          userId: ctx.user.id,
+          userId,
           ...input,
         });
       }),
 
-    update: protectedProcedure
+    update: publicProcedure
       .input(
         z.object({
           id: z.number(),
@@ -54,7 +58,7 @@ export const appRouter = router({
         return db.updateUnit(id, data);
       }),
 
-    delete: protectedProcedure
+    delete: publicProcedure
       .input(z.object({ id: z.number() }))
       .mutation(({ input }) => {
         return db.deleteUnit(input.id);
@@ -63,19 +67,19 @@ export const appRouter = router({
 
   // ============= METERS ROUTES =============
   meters: router({
-    listByUnit: protectedProcedure
+    listByUnit: publicProcedure
       .input(z.object({ unitId: z.number() }))
       .query(({ input }) => {
         return db.getUnitMeters(input.unitId);
       }),
 
-    getById: protectedProcedure
+    getById: publicProcedure
       .input(z.object({ id: z.number() }))
       .query(({ input }) => {
         return db.getMeterById(input.id);
       }),
 
-    create: protectedProcedure
+    create: publicProcedure
       .input(
         z.object({
           unitId: z.number(),
@@ -88,7 +92,7 @@ export const appRouter = router({
         return db.createMeter(input);
       }),
 
-    update: protectedProcedure
+    update: publicProcedure
       .input(
         z.object({
           id: z.number(),
@@ -101,7 +105,7 @@ export const appRouter = router({
         return db.updateMeter(id, data);
       }),
 
-    delete: protectedProcedure
+    delete: publicProcedure
       .input(z.object({ id: z.number() }))
       .mutation(({ input }) => {
         return db.deleteMeter(input.id);
@@ -110,19 +114,19 @@ export const appRouter = router({
 
   // ============= METER READINGS ROUTES =============
   readings: router({
-    listByMeter: protectedProcedure
+    listByMeter: publicProcedure
       .input(z.object({ meterId: z.number(), limit: z.number().default(12) }))
       .query(({ input }) => {
         return db.getMeterReadings(input.meterId, input.limit);
       }),
 
-    getLatest: protectedProcedure
+    getLatest: publicProcedure
       .input(z.object({ meterId: z.number() }))
       .query(({ input }) => {
         return db.getLatestMeterReading(input.meterId);
       }),
 
-    create: protectedProcedure
+    create: publicProcedure
       .input(
         z.object({
           meterId: z.number(),
@@ -155,23 +159,24 @@ export const appRouter = router({
 
   // ============= INVOICES ROUTES =============
   invoices: router({
-    listByUser: protectedProcedure.query(({ ctx }) => {
-      return db.getUserInvoices(ctx.user.id);
+    listByUser: publicProcedure.query(({ ctx }) => {
+      const userId = ctx.user?.id || DEFAULT_USER_ID;
+      return db.getUserInvoices(userId);
     }),
 
-    listByUnit: protectedProcedure
+    listByUnit: publicProcedure
       .input(z.object({ unitId: z.number() }))
       .query(({ input }) => {
         return db.getUnitInvoices(input.unitId);
       }),
 
-    getById: protectedProcedure
+    getById: publicProcedure
       .input(z.object({ id: z.number() }))
       .query(({ input }) => {
         return db.getInvoiceById(input.id);
       }),
 
-    create: protectedProcedure
+    create: publicProcedure
       .input(
         z.object({
           unitId: z.number(),
@@ -203,7 +208,7 @@ export const appRouter = router({
         });
       }),
 
-    updateStatus: protectedProcedure
+    updateStatus: publicProcedure
       .input(
         z.object({
           id: z.number(),
@@ -216,24 +221,26 @@ export const appRouter = router({
         return db.updateInvoice(id, data);
       }),
 
-    getOverdue: protectedProcedure.query(({ ctx }) => {
-      return db.getOverdueInvoices(ctx.user.id);
+    getOverdue: publicProcedure.query(({ ctx }) => {
+      const userId = ctx.user?.id || DEFAULT_USER_ID;
+      return db.getOverdueInvoices(userId);
     }),
   }),
 
   // ============= PAYMENTS ROUTES =============
   payments: router({
-    listByInvoice: protectedProcedure
+    listByInvoice: publicProcedure
       .input(z.object({ invoiceId: z.number() }))
       .query(({ input }) => {
         return db.getInvoicePayments(input.invoiceId);
       }),
 
-    listByUser: protectedProcedure.query(({ ctx }) => {
-      return db.getUserPayments(ctx.user.id);
+    listByUser: publicProcedure.query(({ ctx }) => {
+      const userId = ctx.user?.id || DEFAULT_USER_ID;
+      return db.getUserPayments(userId);
     }),
 
-    create: protectedProcedure
+    create: publicProcedure
       .input(
         z.object({
           invoiceId: z.number(),
@@ -275,32 +282,35 @@ export const appRouter = router({
 
   // ============= STATISTICS ROUTES =============
   statistics: router({
-    getUserStats: protectedProcedure.query(({ ctx }) => {
-      return db.getUserStatistics(ctx.user.id);
+    getUserStats: publicProcedure.query(({ ctx }) => {
+      const userId = ctx.user?.id || DEFAULT_USER_ID;
+      return db.getUserStatistics(userId);
     }),
   }),
 
   // ============= BACKUP ROUTES =============
   backups: router({
-    list: protectedProcedure.query(({ ctx }) => {
-      return db.getUserBackups(ctx.user.id);
+    list: publicProcedure.query(({ ctx }) => {
+      const userId = ctx.user?.id || DEFAULT_USER_ID;
+      return db.getUserBackups(userId);
     }),
 
-    create: protectedProcedure
+    create: publicProcedure
       .input(z.object({ backupName: z.string() }))
       .mutation(async ({ ctx, input }) => {
-        const units = await db.getUserUnits(ctx.user.id);
+        const userId = ctx.user?.id || DEFAULT_USER_ID;
+        const units = await db.getUserUnits(userId);
         const backupData = JSON.stringify({ units, timestamp: new Date() });
 
         return db.createBackup({
-          userId: ctx.user.id,
+          userId,
           backupName: input.backupName,
           backupData,
           backupSize: backupData.length,
         });
       }),
 
-    delete: protectedProcedure
+    delete: publicProcedure
       .input(z.object({ id: z.number() }))
       .mutation(({ input }) => {
         return db.deleteBackup(input.id);
