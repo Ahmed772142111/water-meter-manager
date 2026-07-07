@@ -1,4 +1,4 @@
-import { ScrollView, Text, View, TouchableOpacity, FlatList, ActivityIndicator } from "react-native";
+import { ScrollView, Text, View, TouchableOpacity, FlatList, ActivityIndicator, TextInput } from "react-native";
 import { ScreenContainer } from "@/components/screen-container";
 import { useColors } from "@/hooks/use-colors";
 import { trpc } from "@/lib/trpc";
@@ -239,7 +239,7 @@ export default function InvoicesScreen() {
         ) : filteredInvoices.length > 0 ? (
           <FlatList
             data={filteredInvoices}
-            keyExtractor={(item: any) => item.id.toString()}
+            keyExtractor={(item: any) => item?.id?.toString() || Math.random().toString()}
             renderItem={({ item }) => <InvoiceCard invoice={item} />}
             scrollEnabled={false}
           />

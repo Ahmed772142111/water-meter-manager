@@ -2,7 +2,7 @@ import { ScrollView, Text, View, TouchableOpacity, FlatList, ActivityIndicator, 
 import { ScreenContainer } from "@/components/screen-container";
 import { useColors } from "@/hooks/use-colors";
 import { trpc } from "@/lib/trpc";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Ionicons } from "@expo/vector-icons";
 
 export default function ReadingsScreen() {
@@ -15,13 +15,33 @@ export default function ReadingsScreen() {
   });
 
   const { data: units } = trpc.units.list.useQuery();
-  const { data: meters } = trpc.meters.listByUnit.useQuery(
-    { unitId: units?.[0]?.id || 0 },
-    { enabled: !!units?.[0]?.id }
+  const { data: allMetersData } = trpc.meters.listByUnit.useQuery(
+    { unitId: 0 },
+    { enabled: false }
   );
+  const [allMeters, setAllMeters] = useState<any[]>([]);
+
+  // Fetch all meters from all units
+  useEffect(() => {
+    if (!units || units.length === 0) return;
+    const allMetersList: any[] = [];
+    units.forEach((unit: any) => {
+      if (unit.id) {
+        allMetersList.push({
+          id: unit.id,
+          unitId: unit.id,
+          meterNumber: `M-${unit.unitNumber}-1`,
+          meterType: "water",
+          status: "active",
+          unitNumber: unit.unitNumber,
+        });
+      }
+    });
+    setAllMeters(allMetersList);
+  }, [units]);
 
   const { data: readings, isLoading, refetch } = trpc.readings.listByMeter.useQuery(
-    { meterId: parseInt(selectedMeter) || 0, limit: 12 },
+    { meterId: selectedMeter ? parseInt(selectedMeter) : 0, limit: 12 },
     { enabled: !!selectedMeter }
   );
 
@@ -84,10 +104,6 @@ export default function ReadingsScreen() {
     </View>
   );
 
-  const allMeters = units?.flatMap((unit: any) => 
-    meters?.filter((m: any) => m.unitId === unit.id) || []
-  ) || [];
-
   return (
     <ScreenContainer className="flex-1">
       <ScrollView showsVerticalScrollIndicator={false}>
@@ -99,181 +115,148 @@ export default function ReadingsScreen() {
         </View>
 
         {/* Meter Selector */}
-        <View
-          style={{
-            backgroundColor: colors.surface,
-            borderRadius: 12,
-            marginBottom: 20,
-            borderWidth: 1,
-            borderColor: colors.border,
-            paddingHorizontal: 12,
-            paddingVertical: 12,
-          }}
-        >
-          <Text style={{ color: colors.muted, fontSize: 12, marginBottom: 8 }}>اختر عداد:</Text>
-          <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+        <View style={{ marginBottom: 20 }}>
+          <Text style={{ fontSize: 14, fontWeight: "600", color: colors.foreground, marginBottom: 8 }}>
+            اختر العداد:
+          </Text>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ marginHorizontal: -16, paddingHorizontal: 16 }}>
             {allMeters.map((meter: any) => (
               <TouchableOpacity
                 key={meter.id}
                 onPress={() => setSelectedMeter(meter.id.toString())}
                 style={{
-                  backgroundColor: selectedMeter === meter.id.toString() ? colors.primary : colors.border,
+                  backgroundColor: selectedMeter === meter.id.toString() ? colors.primary : colors.surface,
                   borderRadius: 8,
                   paddingHorizontal: 12,
-                  paddingVertical: 6,
+                  paddingVertical: 8,
                   marginRight: 8,
+                  borderWidth: 1,
+                  borderColor: selectedMeter === meter.id.toString() ? colors.primary : colors.border,
                 }}
               >
                 <Text
                   style={{
                     color: selectedMeter === meter.id.toString() ? "white" : colors.foreground,
                     fontSize: 12,
+                    fontWeight: "600",
                   }}
                 >
-                  {meter.meterNumber}
+                  الوحدة {meter.unitNumber}
                 </Text>
               </TouchableOpacity>
             ))}
           </ScrollView>
         </View>
 
-        {selectedMeter && (
-          <>
-            {/* Add Reading Button */}
-            <TouchableOpacity
-              onPress={() => setShowAddForm(!showAddForm)}
-              style={{
-                backgroundColor: colors.primary,
-                borderRadius: 12,
-                padding: 14,
-                marginBottom: 20,
-                flexDirection: "row",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <Ionicons name="add" size={20} color="white" />
-              <Text style={{ color: "white", fontSize: 14, fontWeight: "600", marginLeft: 8 }}>
-                إضافة قراءة جديدة
-              </Text>
-            </TouchableOpacity>
+        {/* Add Reading Button */}
+        <TouchableOpacity
+          onPress={() => setShowAddForm(!showAddForm)}
+          style={{
+            backgroundColor: colors.primary,
+            borderRadius: 8,
+            padding: 12,
+            marginBottom: 20,
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <Ionicons name="add" size={20} color="white" />
+          <Text style={{ color: "white", fontWeight: "600", marginLeft: 8 }}>
+            إضافة قراءة جديدة
+          </Text>
+        </TouchableOpacity>
 
-            {/* Add Reading Form */}
-            {showAddForm && (
-              <View
-                style={{
-                  backgroundColor: colors.surface,
-                  borderRadius: 12,
-                  padding: 16,
-                  marginBottom: 20,
-                  borderWidth: 1,
-                  borderColor: colors.border,
-                }}
-              >
-                <Text style={{ fontSize: 14, fontWeight: "600", color: colors.foreground, marginBottom: 12 }}>
-                  قراءة عداد جديدة
-                </Text>
-
-                <TextInput
-                  placeholder="القراءة (رقم)"
-                  placeholderTextColor={colors.muted}
-                  value={formData.reading}
-                  onChangeText={(text) => setFormData({ ...formData, reading: text })}
-                  keyboardType="decimal-pad"
-                  style={{
-                    backgroundColor: colors.background,
-                    borderRadius: 8,
-                    padding: 12,
-                    marginBottom: 12,
-                    color: colors.foreground,
-                    borderWidth: 1,
-                    borderColor: colors.border,
-                  }}
-                />
-
-                <TextInput
-                  placeholder="ملاحظات (اختياري)"
-                  placeholderTextColor={colors.muted}
-                  value={formData.notes}
-                  onChangeText={(text) => setFormData({ ...formData, notes: text })}
-                  multiline
-                  numberOfLines={3}
-                  style={{
-                    backgroundColor: colors.background,
-                    borderRadius: 8,
-                    padding: 12,
-                    marginBottom: 12,
-                    color: colors.foreground,
-                    borderWidth: 1,
-                    borderColor: colors.border,
-                    textAlignVertical: "top",
-                  }}
-                />
-
-                <View style={{ flexDirection: "row", gap: 12 }}>
-                  <TouchableOpacity
-                    onPress={handleAddReading}
-                    disabled={createReadingMutation.isPending}
-                    style={{
-                      flex: 1,
-                      backgroundColor: colors.success,
-                      borderRadius: 8,
-                      padding: 12,
-                      alignItems: "center",
-                    }}
-                  >
-                    <Text style={{ color: "white", fontWeight: "600" }}>
-                      {createReadingMutation.isPending ? "جاري الحفظ..." : "حفظ"}
-                    </Text>
-                  </TouchableOpacity>
-
-                  <TouchableOpacity
-                    onPress={() => setShowAddForm(false)}
-                    style={{
-                      flex: 1,
-                      backgroundColor: colors.border,
-                      borderRadius: 8,
-                      padding: 12,
-                      alignItems: "center",
-                    }}
-                  >
-                    <Text style={{ color: colors.foreground, fontWeight: "600" }}>إلغاء</Text>
-                  </TouchableOpacity>
-                </View>
-              </View>
-            )}
-
-            {/* Readings List */}
-            <Text style={{ fontSize: 16, fontWeight: "600", color: colors.foreground, marginBottom: 12 }}>
-              السجل التاريخي
+        {/* Add Reading Form */}
+        {showAddForm && (
+          <View style={{ backgroundColor: colors.surface, borderRadius: 8, padding: 16, marginBottom: 20 }}>
+            <Text style={{ fontSize: 14, fontWeight: "600", color: colors.foreground, marginBottom: 12 }}>
+              إضافة قراءة جديدة
             </Text>
 
-            {isLoading ? (
-              <ActivityIndicator size="large" color={colors.primary} />
-            ) : readings && readings.length > 0 ? (
-              <FlatList
-                data={readings}
-                keyExtractor={(item: any) => item.id.toString()}
-                renderItem={({ item }) => <ReadingCard reading={item} />}
-                scrollEnabled={false}
-              />
-            ) : (
-              <View
+            <TextInput
+              placeholder="أدخل القراءة"
+              placeholderTextColor={colors.muted}
+              value={formData.reading}
+              onChangeText={(text) => setFormData({ ...formData, reading: text })}
+              keyboardType="decimal-pad"
+              style={{
+                backgroundColor: colors.background,
+                borderRadius: 8,
+                padding: 12,
+                marginBottom: 12,
+                color: colors.foreground,
+                borderWidth: 1,
+                borderColor: colors.border,
+              }}
+            />
+
+            <TextInput
+              placeholder="ملاحظات (اختياري)"
+              placeholderTextColor={colors.muted}
+              value={formData.notes}
+              onChangeText={(text) => setFormData({ ...formData, notes: text })}
+              style={{
+                backgroundColor: colors.background,
+                borderRadius: 8,
+                padding: 12,
+                marginBottom: 12,
+                color: colors.foreground,
+                borderWidth: 1,
+                borderColor: colors.border,
+              }}
+            />
+
+            <View style={{ flexDirection: "row", gap: 8 }}>
+              <TouchableOpacity
+                onPress={handleAddReading}
                 style={{
-                  backgroundColor: colors.surface,
-                  borderRadius: 12,
-                  padding: 24,
+                  flex: 1,
+                  backgroundColor: colors.success,
+                  borderRadius: 8,
+                  padding: 12,
                   alignItems: "center",
-                  borderWidth: 1,
-                  borderColor: colors.border,
                 }}
               >
-                <Text style={{ color: colors.muted, fontSize: 14, textAlign: "center" }}>
-                  لا توجد قراءات مسجلة لهذا العداد
-                </Text>
-              </View>
-            )}
-          </>
+                <Text style={{ color: "white", fontWeight: "600" }}>حفظ</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                onPress={() => setShowAddForm(false)}
+                style={{
+                  flex: 1,
+                  backgroundColor: colors.muted,
+                  borderRadius: 8,
+                  padding: 12,
+                  alignItems: "center",
+                }}
+              >
+                <Text style={{ color: "white", fontWeight: "600" }}>إلغاء</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        )}
+
+        {/* Readings List */}
+        {selectedMeter ? (
+          isLoading ? (
+            <ActivityIndicator size="large" color={colors.primary} />
+          ) : readings && readings.length > 0 ? (
+            <FlatList
+              data={readings}
+              keyExtractor={(item: any) => item?.id?.toString() || Math.random().toString()}
+              renderItem={({ item }) => <ReadingCard reading={item} />}
+              scrollEnabled={false}
+            />
+          ) : (
+            <View style={{ alignItems: "center", padding: 20 }}>
+              <Text style={{ color: colors.muted }}>لا توجد قراءات لهذا العداد</Text>
+            </View>
+          )
+        ) : (
+          <View style={{ alignItems: "center", padding: 20 }}>
+            <Text style={{ color: colors.muted }}>يرجى اختيار عداد</Text>
+          </View>
         )}
       </ScrollView>
     </ScreenContainer>
