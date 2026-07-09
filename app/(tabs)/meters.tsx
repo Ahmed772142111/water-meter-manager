@@ -1,4 +1,4 @@
-import { ScrollView, Text, View, TouchableOpacity, FlatList, ActivityIndicator, TextInput } from "react-native";
+import { ScrollView, Text, View, TouchableOpacity, FlatList, ActivityIndicator, TextInput, Alert } from "react-native";
 import { ScreenContainer } from "@/components/screen-container";
 import { useColors } from "@/hooks/use-colors";
 import { trpc } from "@/lib/trpc";
@@ -10,6 +10,8 @@ export default function MetersScreen() {
   const [searchText, setSearchText] = useState("");
   const [showAddForm, setShowAddForm] = useState(false);
   const [selectedUnit, setSelectedUnit] = useState("");
+  const [editingId, setEditingId] = useState<number | null>(null);
+  const [editFormData, setEditFormData] = useState<any>(null);
   const [formData, setFormData] = useState({
     meterNumber: "",
   });
@@ -25,12 +27,38 @@ export default function MetersScreen() {
       refetch();
       setFormData({ meterNumber: "" });
       setShowAddForm(false);
+      Alert.alert("نجاح", "تم إضافة العداد بنجاح");
+    },
+    onError: (error) => {
+      Alert.alert("خطأ", "فشل إضافة العداد: " + (error.message || "حاول مرة أخرى"));
+    },
+  });
+
+  const updateMeterMutation = trpc.meters.update.useMutation({
+    onSuccess: () => {
+      refetch();
+      setEditingId(null);
+      setEditFormData(null);
+      Alert.alert("نجاح", "تم تحديث العداد بنجاح");
+    },
+    onError: (error) => {
+      Alert.alert("خطأ", "فشل تحديث العداد: " + (error.message || "حاول مرة أخرى"));
+    },
+  });
+
+  const deleteMeterMutation = trpc.meters.delete.useMutation({
+    onSuccess: () => {
+      refetch();
+      Alert.alert("نجاح", "تم حذف العداد بنجاح");
+    },
+    onError: (error) => {
+      Alert.alert("خطأ", "فشل حذف العداد: " + (error.message || "حاول مرة أخرى"));
     },
   });
 
   const handleAddMeter = () => {
     if (!formData.meterNumber.trim() || !selectedUnit) {
-      alert("يرجى إدخال رقم العداد واختيار الوحدة");
+      Alert.alert("تنبيه", "يرجى إدخال رقم العداد واختيار الوحدة");
       return;
     }
     createMeterMutation.mutate({
@@ -38,6 +66,21 @@ export default function MetersScreen() {
       meterNumber: formData.meterNumber,
       meterType: "water",
     });
+  };
+
+  const handleDeleteMeter = (meterId: number) => {
+    Alert.alert(
+      "تأكيد الحذف",
+      "هل تريد حذف هذا العداد؟",
+      [
+        { text: "إلغاء", style: "cancel" },
+        {
+          text: "حذف",
+          style: "destructive",
+          onPress: () => deleteMeterMutation.mutate({ id: meterId }),
+        },
+      ]
+    );
   };
 
   const filteredMeters = meters?.filter((meter: any) =>
@@ -63,6 +106,15 @@ export default function MetersScreen() {
           <Text style={{ fontSize: 12, color: colors.muted, marginBottom: 4 }}>
             النوع: مياه
           </Text>
+          <Text
+            style={{
+              fontSize: 12,
+              color: meter.status === "active" ? colors.success : colors.error,
+              marginBottom: 4,
+            }}
+          >
+            الحالة: {meter.status === "active" ? "نشط" : meter.status === "inactive" ? "معطل" : "معيب"}
+          </Text>
           {meter.lastReading && (
             <Text style={{ fontSize: 12, color: colors.muted }}>
               آخر قراءة: {meter.lastReading}
@@ -71,6 +123,10 @@ export default function MetersScreen() {
         </View>
         <View style={{ flexDirection: "row", gap: 8 }}>
           <TouchableOpacity
+            onPress={() => {
+              setEditingId(meter.id);
+              setEditFormData({ ...meter });
+            }}
             style={{
               backgroundColor: colors.primary,
               padding: 8,
@@ -80,6 +136,7 @@ export default function MetersScreen() {
             <Ionicons name="pencil" size={16} color="white" />
           </TouchableOpacity>
           <TouchableOpacity
+            onPress={() => handleDeleteMeter(meter.id)}
             style={{
               backgroundColor: colors.error,
               padding: 8,
@@ -176,7 +233,10 @@ export default function MetersScreen() {
 
             {/* Add Meter Button */}
             <TouchableOpacity
-              onPress={() => setShowAddForm(!showAddForm)}
+              onPress={() => {
+                setShowAddForm(!showAddForm);
+                setEditingId(null);
+              }}
               style={{
                 backgroundColor: colors.primary,
                 borderRadius: 12,
@@ -193,8 +253,120 @@ export default function MetersScreen() {
               </Text>
             </TouchableOpacity>
 
+            {/* Edit Meter Form */}
+            {editingId && editFormData && (
+              <View
+                style={{
+                  backgroundColor: colors.surface,
+                  borderRadius: 12,
+                  padding: 16,
+                  marginBottom: 20,
+                  borderWidth: 1,
+                  borderColor: colors.border,
+                }}
+              >
+                <Text style={{ fontSize: 14, fontWeight: "600", color: colors.foreground, marginBottom: 12 }}>
+                  تعديل العداد
+                </Text>
+
+                <TextInput
+                  placeholder="رقم العداد"
+                  placeholderTextColor={colors.muted}
+                  value={editFormData.meterNumber}
+                  onChangeText={(text) => setEditFormData({ ...editFormData, meterNumber: text })}
+                  style={{
+                    backgroundColor: colors.background,
+                    borderRadius: 8,
+                    padding: 12,
+                    marginBottom: 12,
+                    color: colors.foreground,
+                    borderWidth: 1,
+                    borderColor: colors.border,
+                  }}
+                />
+
+                <View
+                  style={{
+                    backgroundColor: colors.background,
+                    borderRadius: 8,
+                    padding: 12,
+                    marginBottom: 12,
+                    borderWidth: 1,
+                    borderColor: colors.border,
+                  }}
+                >
+                  <Text style={{ color: colors.muted, fontSize: 12, marginBottom: 8 }}>الحالة:</Text>
+                  <View style={{ flexDirection: "row", gap: 8 }}>
+                    {["active", "inactive", "faulty"].map((status) => (
+                      <TouchableOpacity
+                        key={status}
+                        onPress={() => setEditFormData({ ...editFormData, status })}
+                        style={{
+                          flex: 1,
+                          backgroundColor:
+                            editFormData.status === status ? colors.primary : colors.border,
+                          borderRadius: 6,
+                          padding: 8,
+                          alignItems: "center",
+                        }}
+                      >
+                        <Text
+                          style={{
+                            color: editFormData.status === status ? "white" : colors.foreground,
+                            fontSize: 11,
+                          }}
+                        >
+                          {status === "active" ? "نشط" : status === "inactive" ? "معطل" : "معيب"}
+                        </Text>
+                      </TouchableOpacity>
+                    ))}
+                  </View>
+                </View>
+
+                <View style={{ flexDirection: "row", gap: 12 }}>
+                  <TouchableOpacity
+                    onPress={() => {
+                      updateMeterMutation.mutate({
+                        id: editingId,
+                        meterNumber: editFormData.meterNumber,
+                        status: editFormData.status,
+                      });
+                    }}
+                    disabled={updateMeterMutation.isPending}
+                    style={{
+                      flex: 1,
+                      backgroundColor: colors.success,
+                      borderRadius: 8,
+                      padding: 12,
+                      alignItems: "center",
+                    }}
+                  >
+                    <Text style={{ color: "white", fontWeight: "600" }}>
+                      {updateMeterMutation.isPending ? "جاري التحديث..." : "تحديث"}
+                    </Text>
+                  </TouchableOpacity>
+
+                  <TouchableOpacity
+                    onPress={() => {
+                      setEditingId(null);
+                      setEditFormData(null);
+                    }}
+                    style={{
+                      flex: 1,
+                      backgroundColor: colors.border,
+                      borderRadius: 8,
+                      padding: 12,
+                      alignItems: "center",
+                    }}
+                  >
+                    <Text style={{ color: colors.foreground, fontWeight: "600" }}>إلغاء</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            )}
+
             {/* Add Meter Form */}
-            {showAddForm && (
+            {showAddForm && !editingId && (
               <View
                 style={{
                   backgroundColor: colors.surface,
@@ -243,7 +415,10 @@ export default function MetersScreen() {
                   </TouchableOpacity>
 
                   <TouchableOpacity
-                    onPress={() => setShowAddForm(false)}
+                    onPress={() => {
+                      setShowAddForm(false);
+                      setFormData({ meterNumber: "" });
+                    }}
                     style={{
                       flex: 1,
                       backgroundColor: colors.border,

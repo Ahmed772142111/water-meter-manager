@@ -1,4 +1,4 @@
-import { eq, and, gte, lte, desc, asc } from "drizzle-orm";
+import { eq, and, gte, lte, desc, asc, inArray } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
 import mysql from "mysql2/promise";
 import { ENV } from "./_core/env";
@@ -157,7 +157,25 @@ export async function getUserInvoices(userId: number) {
   const db = await getDb();
   if (!db) return [];
   return db
-    .select()
+    .select({
+      id: invoices.id,
+      unitId: invoices.unitId,
+      invoiceNumber: invoices.invoiceNumber,
+      periodStart: invoices.periodStart,
+      periodEnd: invoices.periodEnd,
+      consumption: invoices.consumption,
+      baseAmount: invoices.baseAmount,
+      additionalCharges: invoices.additionalCharges,
+      totalAmount: invoices.totalAmount,
+      status: invoices.status,
+      dueDate: invoices.dueDate,
+      paidDate: invoices.paidDate,
+      notes: invoices.notes,
+      createdAt: invoices.createdAt,
+      updatedAt: invoices.updatedAt,
+      unitNumber: units.unitNumber, // Include unitNumber for display purposes
+      tenantName: units.tenantName, // Include tenantName for display purposes
+    })
     .from(invoices)
     .innerJoin(units, eq(invoices.unitId, units.id))
     .where(eq(units.userId, userId))
@@ -243,7 +261,19 @@ export async function getUserPayments(userId: number) {
   const db = await getDb();
   if (!db) return [];
   return db
-    .select()
+    .select({
+      id: payments.id,
+      invoiceId: payments.invoiceId,
+      amount: payments.amount,
+      paymentDate: payments.paymentDate,
+      paymentMethod: payments.paymentMethod,
+      reference: payments.reference,
+      notes: payments.notes,
+      createdAt: payments.createdAt,
+      invoiceNumber: invoices.invoiceNumber, // Include invoiceNumber for display
+      unitNumber: units.unitNumber, // Include unitNumber for display
+      tenantName: units.tenantName, // Include tenantName for display
+    })
     .from(payments)
     .innerJoin(invoices, eq(payments.invoiceId, invoices.id))
     .innerJoin(units, eq(invoices.unitId, units.id))
@@ -362,16 +392,15 @@ export async function getUserStatistics(userId: number) {
     };
   }
 
-  const userMeters = await db
+  const filteredMeters = await db
     .select()
-    .from(meters);
+    .from(meters)
+    .where(inArray(meters.unitId, unitIds));
 
-  const userInvoices = await db
+  const filteredInvoices = await db
     .select()
-    .from(invoices);
-
-  const filteredMeters = userMeters.filter((m: any) => unitIds.includes(m.unitId));
-  const filteredInvoices = userInvoices.filter((inv: any) => unitIds.includes(inv.unitId));
+    .from(invoices)
+    .where(inArray(invoices.unitId, unitIds));
 
   const paidInvoices = filteredInvoices.filter((inv: any) => inv.status === "paid");
   const pendingInvoices = filteredInvoices.filter(

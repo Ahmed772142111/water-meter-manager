@@ -1,4 +1,4 @@
-import { ScrollView, Text, View, TouchableOpacity, FlatList, ActivityIndicator, TextInput } from "react-native";
+import { ScrollView, Text, View, TouchableOpacity, FlatList, ActivityIndicator, TextInput, Alert } from "react-native";
 import { ScreenContainer } from "@/components/screen-container";
 import { useColors } from "@/hooks/use-colors";
 import { trpc } from "@/lib/trpc";
@@ -9,6 +9,8 @@ export default function UnitsScreen() {
   const colors = useColors();
   const [searchText, setSearchText] = useState("");
   const [showAddForm, setShowAddForm] = useState(false);
+  const [editingId, setEditingId] = useState<number | null>(null);
+  const [editFormData, setEditFormData] = useState<any>(null);
   const [formData, setFormData] = useState({
     unitNumber: "",
     location: "",
@@ -17,11 +19,38 @@ export default function UnitsScreen() {
   });
 
   const { data: units, isLoading, refetch } = trpc.units.list.useQuery();
+  
   const createUnitMutation = trpc.units.create.useMutation({
     onSuccess: () => {
       refetch();
       setFormData({ unitNumber: "", location: "", tenantName: "", tenantPhone: "" });
       setShowAddForm(false);
+      Alert.alert("نجاح", "تم إضافة الوحدة بنجاح");
+    },
+    onError: (error) => {
+      Alert.alert("خطأ", "فشل إضافة الوحدة: " + (error.message || "حاول مرة أخرى"));
+    },
+  });
+
+  const updateUnitMutation = trpc.units.update.useMutation({
+    onSuccess: () => {
+      refetch();
+      setEditingId(null);
+      setEditFormData(null);
+      Alert.alert("نجاح", "تم تحديث الوحدة بنجاح");
+    },
+    onError: (error) => {
+      Alert.alert("خطأ", "فشل تحديث الوحدة: " + (error.message || "حاول مرة أخرى"));
+    },
+  });
+
+  const deleteUnitMutation = trpc.units.delete.useMutation({
+    onSuccess: () => {
+      refetch();
+      Alert.alert("نجاح", "تم حذف الوحدة بنجاح");
+    },
+    onError: (error) => {
+      Alert.alert("خطأ", "فشل حذف الوحدة: " + (error.message || "حاول مرة أخرى"));
     },
   });
 
@@ -32,7 +61,7 @@ export default function UnitsScreen() {
 
   const handleAddUnit = () => {
     if (!formData.unitNumber.trim()) {
-      alert("يرجى إدخال رقم الوحدة");
+      Alert.alert("تنبيه", "يرجى إدخال رقم الوحدة");
       return;
     }
     createUnitMutation.mutate({
@@ -41,6 +70,21 @@ export default function UnitsScreen() {
       tenantName: formData.tenantName,
       tenantPhone: formData.tenantPhone,
     });
+  };
+
+  const handleDeleteUnit = (unitId: number) => {
+    Alert.alert(
+      "تأكيد الحذف",
+      "هل تريد حذف هذه الوحدة؟",
+      [
+        { text: "إلغاء", style: "cancel" },
+        {
+          text: "حذف",
+          style: "destructive",
+          onPress: () => deleteUnitMutation.mutate({ id: unitId }),
+        },
+      ]
+    );
   };
 
   const UnitCard = ({ unit }: { unit: any }) => (
@@ -77,6 +121,10 @@ export default function UnitsScreen() {
         </View>
         <View style={{ flexDirection: "row", gap: 8 }}>
           <TouchableOpacity
+            onPress={() => {
+              setEditingId(unit.id);
+              setEditFormData({ ...unit });
+            }}
             style={{
               backgroundColor: colors.primary,
               padding: 8,
@@ -86,6 +134,7 @@ export default function UnitsScreen() {
             <Ionicons name="pencil" size={16} color="white" />
           </TouchableOpacity>
           <TouchableOpacity
+            onPress={() => handleDeleteUnit(unit.id)}
             style={{
               backgroundColor: colors.error,
               padding: 8,
@@ -149,7 +198,10 @@ export default function UnitsScreen() {
 
         {/* Add Unit Button */}
         <TouchableOpacity
-          onPress={() => setShowAddForm(!showAddForm)}
+          onPress={() => {
+            setShowAddForm(!showAddForm);
+            setEditingId(null);
+          }}
           style={{
             backgroundColor: colors.primary,
             borderRadius: 12,
@@ -166,8 +218,133 @@ export default function UnitsScreen() {
           </Text>
         </TouchableOpacity>
 
+        {/* Edit Unit Form */}
+        {editingId && editFormData && (
+          <View
+            style={{
+              backgroundColor: colors.surface,
+              borderRadius: 12,
+              padding: 16,
+              marginBottom: 20,
+              borderWidth: 1,
+              borderColor: colors.border,
+            }}
+          >
+            <Text style={{ fontSize: 14, fontWeight: "600", color: colors.foreground, marginBottom: 12 }}>
+              تعديل الوحدة
+            </Text>
+
+            <TextInput
+              placeholder="رقم الوحدة"
+              placeholderTextColor={colors.muted}
+              value={editFormData.unitNumber}
+              onChangeText={(text) => setEditFormData({ ...editFormData, unitNumber: text })}
+              style={{
+                backgroundColor: colors.background,
+                borderRadius: 8,
+                padding: 12,
+                marginBottom: 12,
+                color: colors.foreground,
+                borderWidth: 1,
+                borderColor: colors.border,
+              }}
+            />
+
+            <TextInput
+              placeholder="الموقع"
+              placeholderTextColor={colors.muted}
+              value={editFormData.location || ""}
+              onChangeText={(text) => setEditFormData({ ...editFormData, location: text })}
+              style={{
+                backgroundColor: colors.background,
+                borderRadius: 8,
+                padding: 12,
+                marginBottom: 12,
+                color: colors.foreground,
+                borderWidth: 1,
+                borderColor: colors.border,
+              }}
+            />
+
+            <TextInput
+              placeholder="اسم المستأجر"
+              placeholderTextColor={colors.muted}
+              value={editFormData.tenantName || ""}
+              onChangeText={(text) => setEditFormData({ ...editFormData, tenantName: text })}
+              style={{
+                backgroundColor: colors.background,
+                borderRadius: 8,
+                padding: 12,
+                marginBottom: 12,
+                color: colors.foreground,
+                borderWidth: 1,
+                borderColor: colors.border,
+              }}
+            />
+
+            <TextInput
+              placeholder="رقم الهاتف"
+              placeholderTextColor={colors.muted}
+              value={editFormData.tenantPhone || ""}
+              onChangeText={(text) => setEditFormData({ ...editFormData, tenantPhone: text })}
+              keyboardType="phone-pad"
+              style={{
+                backgroundColor: colors.background,
+                borderRadius: 8,
+                padding: 12,
+                marginBottom: 12,
+                color: colors.foreground,
+                borderWidth: 1,
+                borderColor: colors.border,
+              }}
+            />
+
+            <View style={{ flexDirection: "row", gap: 12 }}>
+              <TouchableOpacity
+                onPress={() => {
+                  updateUnitMutation.mutate({
+                    id: editingId,
+                    unitNumber: editFormData.unitNumber,
+                    location: editFormData.location,
+                    tenantName: editFormData.tenantName,
+                    tenantPhone: editFormData.tenantPhone,
+                  });
+                }}
+                disabled={updateUnitMutation.isPending}
+                style={{
+                  flex: 1,
+                  backgroundColor: colors.success,
+                  borderRadius: 8,
+                  padding: 12,
+                  alignItems: "center",
+                }}
+              >
+                <Text style={{ color: "white", fontWeight: "600" }}>
+                  {updateUnitMutation.isPending ? "جاري التحديث..." : "تحديث"}
+                </Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                onPress={() => {
+                  setEditingId(null);
+                  setEditFormData(null);
+                }}
+                style={{
+                  flex: 1,
+                  backgroundColor: colors.border,
+                  borderRadius: 8,
+                  padding: 12,
+                  alignItems: "center",
+                }}
+              >
+                <Text style={{ color: colors.foreground, fontWeight: "600" }}>إلغاء</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        )}
+
         {/* Add Unit Form */}
-        {showAddForm && (
+        {showAddForm && !editingId && (
           <View
             style={{
               backgroundColor: colors.surface,
@@ -265,7 +442,10 @@ export default function UnitsScreen() {
               </TouchableOpacity>
 
               <TouchableOpacity
-                onPress={() => setShowAddForm(false)}
+                onPress={() => {
+                  setShowAddForm(false);
+                  setFormData({ unitNumber: "", location: "", tenantName: "", tenantPhone: "" });
+                }}
                 style={{
                   flex: 1,
                   backgroundColor: colors.border,
