@@ -1,0 +1,4 @@
+Redeploy trigger file
+
+This file was added automatically to force a GitHub Pages rebuild.
+Timestamp: 2026-09-07T00:00:00Z
