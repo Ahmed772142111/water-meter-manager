@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>سياسة الخصوصية | تطبيق واما (WAMA)</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0284c7;
+            --primary-dark: #0369a1;
+            --primary-light: #e0f2fe;
+            --secondary: #10b981;
+            --dark: #0f172a;
+            --gray-800: #1e293b;
+            --gray-600: #475569;
+            --gray-400: #94a3b8;
+            --gray-100: #f1f5f9;
+            --white: #ffffff;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            --radius-lg: 16px;
+            --radius-md: 10px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Tajawal', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: #f8fafc;
+            color: var(--gray-800);
+            line-height: 1.8;
+            padding-bottom: 60px;
+        }
+
+        .top-bar {
+            background: var(--white);
+            border-bottom: 1px solid #e2e8f0;
+            padding: 12px 24px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .brand-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .brand-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 800;
+            font-size: 20px;
+            box-shadow: 0 4px 10px rgba(2, 132, 199, 0.3);
+        }
+
+        .brand-title {
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: var(--dark);
+        }
+
+        .lang-switch {
+            display: flex;
+            background: var(--gray-100);
+            padding: 4px;
+            border-radius: 30px;
+            border: 1px solid #cbd5e1;
+        }
+
+        .lang-btn {
+            border: none;
+            background: transparent;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: inherit;
+            color: var(--gray-600);
+        }
+
+        .lang-btn.active {
+            background: var(--primary);
+            color: var(--white);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 32px auto;
+            padding: 0 20px;
+        }
+
+        .hero-card {
+            background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+            color: white;
+            padding: 40px 32px;
+            border-radius: var(--radius-lg);
+            text-align: center;
+            margin-bottom: 30px;
+            box-shadow: var(--shadow-lg);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
+            pointer-events: none;
+        }
+
+        .hero-card h1 {
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 10px;
+        }
+
+        .hero-card p {
+            font-size: 1.05rem;
+            opacity: 0.92;
+        }
+
+        .meta-tag {
+            display: inline-block;
+            margin-top: 15px;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(8px);
+            padding: 4px 14px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+        }
+
+        .content-card {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            padding: 36px 32px;
+            box-shadow: var(--shadow);
+            border: 1px solid #e2e8f0;
+            margin-bottom: 24px;
+        }
+
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--primary-dark);
+            font-size: 1.35rem;
+            font-weight: 700;
+            margin-bottom: 16px;
+            border-bottom: 2px solid var(--primary-light);
+            padding-bottom: 8px;
+        }
+
+        .section-icon {
+            font-size: 1.5rem;
+        }
+
+        p {
+            color: var(--gray-600);
+            margin-bottom: 14px;
+            font-size: 1rem;
+        }
+
+        ul {
+            margin: 12px 24px 20px 0;
+            color: var(--gray-600);
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        .badge-info {
+            background-color: var(--primary-light);
+            color: var(--primary-dark);
+            padding: 14px 18px;
+            border-radius: var(--radius-md);
+            border-right: 4px solid var(--primary);
+            margin: 18px 0;
+            font-weight: 500;
+        }
+
+        .badge-secure {
+            background-color: #ecfdf5;
+            color: #065f46;
+            padding: 14px 18px;
+            border-radius: var(--radius-md);
+            border-right: 4px solid var(--secondary);
+            margin: 18px 0;
+            font-weight: 500;
+        }
+
+        .contact-box {
+            background: #f8fafc;
+            border: 1px dashed #cbd5e1;
+            border-radius: var(--radius-md);
+            padding: 20px;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .contact-box a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 700;
+            word-break: break-all;
+        }
+
+        .contact-box a:hover {
+            text-decoration: underline;
+        }
+
+        [dir="ltr"] body {
+            font-family: 'Inter', sans-serif;
+        }
+        [dir="ltr"] ul {
+            margin: 12px 0 20px 24px;
+        }
+        [dir="ltr"] .badge-info, [dir="ltr"] .badge-secure {
+            border-right: none;
+            border-left: 4px solid var(--primary);
+        }
+        [dir="ltr"] .badge-secure {
+            border-left-color: var(--secondary);
+        }
+
+        footer {
+            text-align: center;
+            color: var(--gray-400);
+            font-size: 0.9rem;
+            margin-top: 40px;
+        }
+
+        @media (max-width: 640px) {
+            .hero-card {
+                padding: 28px 20px;
+            }
+            .hero-card h1 {
+                font-size: 1.5rem;
+            }
+            .content-card {
+                padding: 24px 18px;
+            }
+            .section-title {
+                font-size: 1.15rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="top-bar">
+        <div class="brand-wrapper">
+            <div class="brand-icon">W</div>
+            <div class="brand-title" id="brand-name">واما | WAMA</div>
+        </div>
+        <div class="lang-switch">
+            <button class="lang-btn active" id="btn-ar" onclick="switchLang('ar')">العربية</button>
+            <button class="lang-btn" id="btn-en" onclick="switchLang('en')">English</button>
+        </div>
+    </header>
+
+    <div class="container">
+
+        <div id="content-ar">
+            <div class="hero-card">
+                <h1>سياسة الخصوصية</h1>
+                <p>تطبيق واما (WAMA) - لإدارة العدادات والفواتير والتحصيل المالي</p>
+                <span class="meta-tag">تاريخ آخر تحديث: 1 سبتمبر 2026</span>
+            </div>
+
+            <div class="content-card">
+                <div class="section-title">
+                    <span class="section-icon">🛡️</span>
+                    <span>1. مقدمة والتزامنا بالخصوصية</span>
+                </div>
+                <p>
+                    أهلاً بك في تطبيق <strong>واما (WAMA)</strong>. نحن نولي خصوصية بياناتك اهتماماً فائقاً ونتعهد بحماية معلوماتك الشخصية. توضح سياسة الخصوصية هذه كيفية تعامل التطبيق مع البيانات والمعلومات عند استخدامك لخدماتنا لإدارة قراءات العدادات، إصدار الفواتير، وسندات القبض المالي.
+                </p>
+                <div class="badge-secure">
+                    ✅ <strong>الخصوصية أولاً:</strong> لا يقوم تطبيق "واما" ببيع، تأجير، أو مشاركة بياناتك الشخصية أو سجلات المستأجرين مع أي جهات خارجية أو أطراف تسويقية إطلاقاً.
+                </div>
+            </div>
+
+            <div class="content-card">
+                <div class="section-title">
+                    <span class="section-icon">📊</span>
+                    <span>2. نوع البيانات التي يتعامل معها التطبيق</span>
+                </div>
+                <p>تم تصميم التطبيق ليعمل كأداة محلية لإدارة العقارات والمرافق، ويتم التعامل مع البيانات التالية:</p>
+                <ul>
+                    <li><strong>بيانات العقارات والوحدات:</strong> أسماء المباني، أرقام الوحدات السكنية أو التجارية، وأسماء المستأجرين.</li>
+                    <li><strong>قراءات العدادات:</strong> قراءات عدادات الكهرباء والمياه (الفرعية والرئيسية)، فترات الاستهلاك، والتعرفة المحتسبة.</li>
+                    <li><strong>السجلات المالية والفواتير:</strong> مبالغ الفواتير الصادرة، المتأخرات السابقة، وسندات القبض المسجلة (نقداً أو تحويل بنكي).</li>
+                    <li><strong>النسخ الاحتياطي المحلي:</strong> ملفات النسخ الاحتياطي للبيانات التي يتم تخزينها على وحدة التخزين الخاصة بجهازك لضمان عدم فقدان السجلات.</li>
+                </ul>
+                <div class="badge-info">
+                    💾 <strong>التخزين المحلي:</strong> يتم تخزين هذه البيانات محلياً داخل قاعدة بيانات آمنة على جهازك المحمول، وتظل تحت تحكمك الكامل.
+                </div>
+            </div>
+
+            <div class="content-card">
+                <div class="section-title">
+                    <span class="section-icon">🔑</span>
+                    <span>3. الأذونات والصلاحيات المطلوبة (Permissions)</span>
+                </div>
+                <p>يطلب التطبيق الحد الأدنى من الصلاحيات الضرورية لأداء الوظائف التشغيلية:</p>
+                <ul>
+                    <li><strong>صلاحية التخزين والملفات (Storage / Media):</strong> لإنشاء وتصدير ملفات الفواتير وسندات القبض والتقارير بصيغة <strong>PDF</strong> وحفظها على هاتفك لمشاركتها أو طباعتها، وكذلك لإنشاء واستعادة النسخ الاحتياطية.</li>
+                    <li><strong>صلاحية الكاميرا (اختيارية):</strong> تُستخدم فقط في حال رغبتك بالتقاط صور لقراءات العدادات أو سندات التحويل البنكي لتوثيقها محلياً داخل التطبيق.</li>
+                    <li><strong>صلاحية الوصول للإنترنت (Network Access):</strong> تُستخدم للمهام التقنية الأساسية مثل التحقق من وجود تحديثات، أو مشاركة الفواتير عبر تطبيقات المراسلة (مثل WhatsApp).</li>
+                </ul>
+            </div>
+
+            <div class="content-card">
+                <div class="section-title">
+                    <span class="section-icon">🔒</span>
+                    <span>4. حماية وأمن البيانات</span>
+                </div>
+                <p>
+                    نحن نطبق أعلى معايير الأمان لحماية بياناتك من الوصول غير المصرح به أو التغيير أو الفقدان. لا يتم رفع سجلات فواتيرك أو أسماء مستأجريك إلى خوادم عامة مجهولة، بل تظل محمية داخل البيئة المعزولة للتطبيق (App Sandbox).
+                </p>
+            </div>
+
+            <div class="content-card">
+                <div class="section-title">
+                    <span class="section-icon">🗑️</span>
+                    <span>5. حذف البيانات والتحكم بها</span>
+                </div>
+                <p>
+                    لديك السيطرة الكاملة على كافة بياناتك في أي وقت. يمكنك تعديل أو حذف أي قراءة، فاتورة، مستأجر، أو مبنى مباشرة من داخل التطبيق. عند مسح بيانات التطبيق أو إلغاء تثبيته، سيتم حذف جميع البيانات المخزنة محلياً بشكل نهائي ما لم تكن قد قمت بحفظ نسخة احتياطية خارجية مسبقاً.
+                </p>
+            </div>
+
+            <div class="content-card">
+                <div class="section-title">
+                    <span class="section-icon">👶</span>
+                    <span>6. خصوصية الأطفال</span>
+                </div>
+                <p>
+                    خدماتنا غير موجهة للأطفال دون سن 13 عاماً، ولا نجمع عمداً أي بيانات شخصية تخص الأطفال وفقاً لقوانين حماية خصوصية الأطفال على الإنترنت (COPPA).
+                </p>
+            </div>
+
+            <div class="content-card">
+                <div class="section-title">
+                    <span class="section-icon">🔄</span>
+                    <span>7. التعديلات على سياسة الخصوصية</span>
+                </div>
+                <p>
+                    قد نقوم بتحديث سياسة الخصوصية هذه من وقت لآخر لتعكس أي تحسينات في ميزات التطبيق أو لمواكبة المتطلبات القانونية والتنظيمية لمتجر Google Play. سيتم نشر أي تعديل في هذه الصفحة مع تحديث تاريخ التعديل أعلاه.
+                </p>
+            </div>
+
+            <div class="content-card">
+                <div class="section-title">
+                    <span class="section-icon">📬</span>
+                    <span>8. التواصل معنا</span>
+                </div>
+                <p>إذا كان لديك أي أسئلة، استفسارات، أو اقتراحات بخصوص سياسة الخصوصية أو التطبيق، يسعدنا تواصلك معنا عبر:</p>
+                <div class="contact-box">
+                    <p><strong>فريق دعم تطبيق واما (WAMA Support):</strong></p>
+                    <p>📧 البريد الإلكتروني: <a href="mailto:support@wama-app.com">support@wama-app.com</a></p>
+                    <p>📱 تطبيق: واما - إدارة العدادات والفواتير</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="content-en" style="display: none;">
+            <div class="hero-card">
+                <h1>Privacy Policy</h1>
+                <p>WAMA App - Utility Meter, Invoicing & Billing Manager</p>
+                <span class="meta-tag">Last Updated: September 1, 2026</span>
+            </div>
+
+            <div class="content-card">
+                <div class="section-title">
+                    <span class="section-icon">🛡️</span>
+                    <span>1. Introduction & Privacy Commitment</span>
+                </div>
+                <p>
+                    Welcome to <strong>WAMA</strong> ("we", "our", or "the App"). We respect your privacy and are committed to protecting your personal and operational data. This Privacy Policy outlines how our application collects, uses, and safeguards information when you use our utility meter management, billing, and receipt voucher services.
+                </p>
+                <div class="badge-secure">
+                    ✅ <strong>Privacy First:</strong> WAMA does not sell, rent, or trade your personal data or tenant records with any third-party marketing entities.
+                </div>
+            </div>
+
+            <div class="content-card">
+                <div class="section-title">
+                    <span class="section-icon">📊</span>
+                    <span>2. Information We Handle</span>
+                </div>
+                <p>The app is engineered as a local property and utility management tool. It handles the following data:</p>
+                <ul>
+                    <li><strong>Property & Unit Details:</strong> Building names, apartment/unit numbers, and tenant names.</li>
+                    <li><strong>Meter Readings:</strong> Water and electricity meter readings (sub-meters and master meters), billing cycles, and tariff settings.</li>
+                    <li><strong>Financial & Invoice Records:</strong> Issued invoices, dues, service fees, and payment vouchers (Cash / Bank Transfers).</li>
+                    <li><strong>Local Backup Files:</strong> Encrypted backup archives stored on your device storage for data restoration.</li>
+                </ul>
+                <div class="badge-info">
+                    💾 <strong>Local Storage:</strong> All operational data is stored locally within a secure SQLite database on your device, remaining under your full control.
+                </div>
+            </div>
+
+            <div class="content-card">
+                <div class="section-title">
+                    <span class="section-icon">🔑</span>
+                    <span>3. App Permissions</span>
+                </div>
+                <p>WAMA requests only the minimum essential permissions necessary for core app features:</p>
+                <ul>
+                    <li><strong>Storage / Media Permission:</strong> Required to generate, save, and export <strong>PDF</strong> invoices, receipts, and reports to your device storage for printing and sharing.</li>
+                    <li><strong>Camera Permission (Optional):</strong> Used only if you choose to snap photos of physical meter dials or payment transfer slips for local attachment.</li>
+                    <li><strong>Internet Access:</strong> Used for general framework services, update checks, and initiating shares via messaging apps (e.g., WhatsApp).</li>
+                </ul>
+            </div>
+
+            <div class="content-card">
+                <div class="section-title">
+                    <span class="section-icon">🔒</span>
+                    <span>4. Data Security</span>
+                </div>
+                <p>
+                    We implement standard security measures to protect your information. Your meter records and billing information are sandboxed on your device and are not uploaded to unauthorized public databases.
+                </p>
+            </div>
+
+            <div class="content-card">
+                <div class="section-title">
+                    <span class="section-icon">🗑️</span>
+                    <span>5. Data Retention and Deletion</span>
+                </div>
+                <p>
+                    You have complete autonomy over your data. You can edit, delete, or reset any record, tenant, invoice, or building directly from the app interface. Uninstalling the app removes all locally stored data permanently unless you have created an external backup.
+                </p>
+            </div>
+
+            <div class="content-card">
+                <div class="section-title">
+                    <span class="section-icon">👶</span>
+                    <span>6. Children's Privacy</span>
+                </div>
+                <p>
+                    Our service is not directed to individuals under the age of 13. We do not knowingly collect personal information from children in compliance with COPPA and Google Play family policies.
+                </p>
+            </div>
+
+            <div class="content-card">
+                <div class="section-title">
+                    <span class="section-icon">🔄</span>
+                    <span>7. Changes to This Privacy Policy</span>
+                </div>
+                <p>
+                    We may update this policy periodically to reflect application enhancements or regulatory updates. Any revisions will be published on this page with an updated revision date.
+                </p>
+            </div>
+
+            <div class="content-card">
+                <div class="section-title">
+                    <span class="section-icon">📬</span>
+                    <span>8. Contact Us</span>
+                </div>
+                <p>If you have any questions, feedback, or concerns regarding this Privacy Policy, please contact our support team:</p>
+                <div class="contact-box">
+                    <p><strong>WAMA Support Team:</strong></p>
+                    <p>📧 Email: <a href="mailto:support@wama-app.com">support@wama-app.com</a></p>
+                    <p>📱 Application: WAMA - Utility Meter & Billing Manager</p>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>© 2026 WAMA (واما). جميع الحقوق محفوظة | All rights reserved.</p>
+        </footer>
+
+    </div>
+
+    <script>
+        function switchLang(lang) {
+            const arContent = document.getElementById('content-ar');
+            const enContent = document.getElementById('content-en');
+            const btnAr = document.getElementById('btn-ar');
+            const btnEn = document.getElementById('btn-en');
+            const brand = document.getElementById('brand-name');
+
+            if (lang === 'ar') {
+                document.documentElement.setAttribute('dir', 'rtl');
+                document.documentElement.setAttribute('lang', 'ar');
+                arContent.style.display = 'block';
+                enContent.style.display = 'none';
+                btnAr.classList.add('active');
+                btnEn.classList.remove('active');
+                brand.innerText = 'واما | WAMA';
+            } else {
+                document.documentElement.setAttribute('dir', 'ltr');
+                document.documentElement.setAttribute('lang', 'en');
+                arContent.style.display = 'none';
+                enContent.style.display = 'block';
+                btnEn.classList.add('active');
+                btnAr.classList.remove('active');
+                brand.innerText = 'WAMA | واما';
+            }
+        }
+    </script>
+</body>
+</html>

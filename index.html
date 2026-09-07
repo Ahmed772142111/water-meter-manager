@@ -1,0 +1,1598 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تطبيق واما (WAMA) | إدارة عدادات المياه والفواتير الذكية</title>
+    <meta name="description" content="تطبيق واما (WAMA) هو الحل المتكامل لإدارة قراءات عدادات المياه، إصدار الفواتير وسندات القبض PDF، ومشاركتها بسهولة عبر واتساب بدون الحاجة إلى إنترنت.">
+    <meta name="keywords" content="عدادات المياه, واما, WAMA, فواتير المياه, قراءة العداد, إدارة العقارات, تطبيق فواتير, Water Meter Manager">
+    
+    <!-- Open Graph / Meta -->
+    <meta property="og:title" content="تطبيق واما (WAMA) | إدارة عدادات المياه والفواتير">
+    <meta property="og:description" content="الحل الأمثل والذكي لإدارة قراءات عدادات المياه، حساب الاستهلاك التلقائي، وإصدار الفواتير وسندات القبض.">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="app-icon.png">
+    
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #0284c7;
+            --primary-dark: #0369a1;
+            --primary-light: #e0f2fe;
+            --secondary: #10b981;
+            --secondary-dark: #059669;
+            --accent: #06b6d4;
+            --dark: #0f172a;
+            --dark-card: #1e293b;
+            --gray-900: #0f172a;
+            --gray-800: #1e293b;
+            --gray-700: #334155;
+            --gray-600: #475569;
+            --gray-400: #94a3b8;
+            --gray-200: #e2e8f0;
+            --gray-100: #f1f5f9;
+            --gray-50: #f8fafc;
+            --white: #ffffff;
+            --gradient-primary: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+            --gradient-water: linear-gradient(135deg, #0284c7 0%, #06b6d4 50%, #10b981 100%);
+            --gradient-hero: linear-gradient(180deg, #f0f9ff 0%, #f8fafc 100%);
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
+            --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.07), 0 2px 4px -2px rgba(0,0,0,0.06);
+            --shadow-lg: 0 10px 25px -5px rgba(2,132,199,0.12), 0 8px 10px -6px rgba(2,132,199,0.08);
+            --shadow-xl: 0 20px 35px -5px rgba(2,132,199,0.18);
+            --radius-sm: 8px;
+            --radius-md: 14px;
+            --radius-lg: 20px;
+            --radius-full: 9999px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Tajawal', 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--gray-50);
+            color: var(--gray-800);
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        /* Top Notification Bar */
+        .announcement-bar {
+            background: var(--gradient-water);
+            color: white;
+            text-align: center;
+            padding: 8px 16px;
+            font-size: 0.88rem;
+            font-weight: 600;
+        }
+
+        /* Navbar */
+        .navbar {
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--gray-200);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            transition: var(--transition);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 14px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: var(--dark);
+        }
+
+        .brand-logo {
+            width: 44px;
+            height: 44px;
+            border-radius: var(--radius-md);
+            box-shadow: 0 4px 12px rgba(2, 132, 199, 0.25);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--gradient-primary);
+            overflow: hidden;
+        }
+
+        .brand-logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .brand-text {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .brand-name {
+            font-size: 1.35rem;
+            font-weight: 800;
+            color: var(--primary-dark);
+            line-height: 1.2;
+            letter-spacing: -0.5px;
+        }
+
+        .brand-tagline {
+            font-size: 0.75rem;
+            color: var(--gray-600);
+            font-weight: 600;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 28px;
+            list-style: none;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: var(--gray-700);
+            font-weight: 600;
+            font-size: 0.96rem;
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .nav-link:hover {
+            color: var(--primary);
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .lang-toggle {
+            display: flex;
+            background: var(--gray-100);
+            padding: 3px;
+            border-radius: var(--radius-full);
+            border: 1px solid var(--gray-200);
+        }
+
+        .lang-btn {
+            border: none;
+            background: transparent;
+            padding: 5px 14px;
+            border-radius: var(--radius-full);
+            font-size: 0.85rem;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: inherit;
+            color: var(--gray-600);
+            transition: var(--transition);
+        }
+
+        .lang-btn.active {
+            background: var(--primary);
+            color: white;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .btn-nav-download {
+            background: var(--gradient-primary);
+            color: white;
+            text-decoration: none;
+            padding: 10px 22px;
+            border-radius: var(--radius-full);
+            font-weight: 700;
+            font-size: 0.92rem;
+            transition: var(--transition);
+            box-shadow: 0 4px 14px rgba(2, 132, 199, 0.3);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-nav-download:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(2, 132, 199, 0.4);
+        }
+
+        /* Hero Section */
+        .hero {
+            background: var(--gradient-hero);
+            position: relative;
+            padding: 80px 24px 70px;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -120px;
+            right: -100px;
+            width: 480px;
+            height: 480px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(2,132,199,0.12) 0%, rgba(2,132,199,0) 70%);
+            pointer-events: none;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            bottom: -80px;
+            left: -80px;
+            width: 400px;
+            height: 400px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(16,185,129,0.12) 0%, rgba(16,185,129,0) 70%);
+            pointer-events: none;
+        }
+
+        .hero-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1.15fr 0.85fr;
+            gap: 48px;
+            align-items: center;
+            position: relative;
+            z-index: 10;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--primary-light);
+            color: var(--primary-dark);
+            padding: 6px 16px;
+            border-radius: var(--radius-full);
+            font-size: 0.88rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            border: 1px solid rgba(2, 132, 199, 0.2);
+        }
+
+        .hero-title {
+            font-size: 3rem;
+            font-weight: 900;
+            color: var(--dark);
+            line-height: 1.25;
+            margin-bottom: 20px;
+            letter-spacing: -0.5px;
+        }
+
+        .hero-title span.highlight {
+            background: var(--gradient-water);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-desc {
+            font-size: 1.15rem;
+            color: var(--gray-600);
+            margin-bottom: 34px;
+            line-height: 1.8;
+            max-width: 580px;
+        }
+
+        .hero-buttons {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-bottom: 36px;
+        }
+
+        /* Google Play Button */
+        .btn-playstore {
+            background: #0f172a;
+            color: white;
+            padding: 12px 24px;
+            border-radius: var(--radius-md);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 14px;
+            box-shadow: 0 6px 20px rgba(15, 23, 42, 0.25);
+            transition: var(--transition);
+        }
+
+        .btn-playstore:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(15, 23, 42, 0.35);
+            background: #1e293b;
+        }
+
+        .play-icon svg {
+            width: 32px;
+            height: 32px;
+        }
+
+        .play-text {
+            display: flex;
+            flex-direction: column;
+            text-align: right;
+        }
+
+        [dir="ltr"] .play-text {
+            text-align: left;
+        }
+
+        .play-subtitle {
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            opacity: 0.8;
+        }
+
+        .play-title {
+            font-size: 1.12rem;
+            font-weight: 800;
+            line-height: 1.1;
+        }
+
+        .btn-privacy {
+            background: white;
+            color: var(--gray-700);
+            border: 2px solid var(--gray-200);
+            padding: 14px 24px;
+            border-radius: var(--radius-md);
+            text-decoration: none;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            transition: var(--transition);
+        }
+
+        .btn-privacy:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            background: var(--primary-light);
+            transform: translateY(-2px);
+        }
+
+        /* Trust Chips */
+        .trust-pills {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .trust-pill {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--gray-600);
+        }
+
+        .trust-pill-icon {
+            color: var(--secondary);
+            font-size: 1.1rem;
+        }
+
+        /* Hero Device Mockup */
+        .mockup-wrapper {
+            position: relative;
+            display: flex;
+            justify-content: center;
+        }
+
+        .mockup-phone {
+            width: 330px;
+            background: #ffffff;
+            border-radius: 42px;
+            padding: 14px;
+            box-shadow: 0 25px 60px -15px rgba(2, 132, 199, 0.25), 0 0 0 10px #0f172a, 0 0 0 12px #334155;
+            position: relative;
+            z-index: 10;
+        }
+
+        .phone-notch {
+            width: 110px;
+            height: 18px;
+            background: #0f172a;
+            border-radius: 0 0 14px 14px;
+            margin: 0 auto 12px;
+        }
+
+        .screen-content {
+            background: #f8fafc;
+            border-radius: 28px;
+            padding: 18px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .phone-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .phone-badge {
+            font-size: 0.72rem;
+            background: #e0f2fe;
+            color: #0369a1;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-weight: 700;
+        }
+
+        .phone-card {
+            background: white;
+            border-radius: 16px;
+            padding: 14px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            border: 1px solid #f1f5f9;
+        }
+
+        .phone-card-hero {
+            background: var(--gradient-primary);
+            color: white;
+            border-radius: 18px;
+            padding: 16px;
+            box-shadow: 0 8px 18px rgba(2, 132, 199, 0.3);
+        }
+
+        .phone-stat-title {
+            font-size: 0.78rem;
+            opacity: 0.85;
+            margin-bottom: 4px;
+        }
+
+        .phone-stat-val {
+            font-size: 1.45rem;
+            font-weight: 800;
+        }
+
+        .meter-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #f1f5f9;
+            font-size: 0.82rem;
+        }
+
+        .meter-row:last-child {
+            border-bottom: none;
+        }
+
+        .badge-paid {
+            background: #dcfce7;
+            color: #15803d;
+            font-weight: 700;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.72rem;
+        }
+
+        .badge-pending {
+            background: #fef3c7;
+            color: #b45309;
+            font-weight: 700;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.72rem;
+        }
+
+        /* Floating Accent Cards */
+        .floating-badge {
+            position: absolute;
+            background: white;
+            padding: 12px 18px;
+            border-radius: 16px;
+            box-shadow: 0 12px 30px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            z-index: 20;
+            animation: float 4s ease-in-out infinite alternate;
+        }
+
+        .float-1 {
+            top: 60px;
+            right: -25px;
+            border-left: 4px solid var(--secondary);
+        }
+
+        .float-2 {
+            bottom: 40px;
+            left: -35px;
+            border-left: 4px solid var(--primary);
+            animation-delay: -2s;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-12px); }
+        }
+
+        /* Section Styling */
+        .section {
+            padding: 90px 24px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            text-align: center;
+            max-width: 680px;
+            margin: 0 auto 56px;
+        }
+
+        .section-tag {
+            color: var(--primary);
+            font-weight: 800;
+            font-size: 0.92rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+            display: inline-block;
+        }
+
+        .section-title {
+            font-size: 2.25rem;
+            font-weight: 800;
+            color: var(--dark);
+            margin-bottom: 16px;
+            line-height: 1.3;
+        }
+
+        .section-desc {
+            font-size: 1.05rem;
+            color: var(--gray-600);
+        }
+
+        /* Features Grid */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 28px;
+        }
+
+        .feature-card {
+            background: white;
+            border-radius: var(--radius-lg);
+            padding: 32px 28px;
+            border: 1px solid var(--gray-200);
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-6px);
+            box-shadow: var(--shadow-xl);
+            border-color: rgba(2, 132, 199, 0.4);
+        }
+
+        .feature-icon-wrapper {
+            width: 58px;
+            height: 58px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            margin-bottom: 22px;
+            background: var(--primary-light);
+            color: var(--primary);
+            transition: var(--transition);
+        }
+
+        .feature-card:hover .feature-icon-wrapper {
+            background: var(--gradient-primary);
+            color: white;
+            transform: scale(1.05);
+        }
+
+        .feature-title {
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: var(--dark);
+            margin-bottom: 12px;
+        }
+
+        .feature-desc {
+            font-size: 0.96rem;
+            color: var(--gray-600);
+            line-height: 1.7;
+        }
+
+        /* Interactive Calculator Widget */
+        .calc-section {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: white;
+            border-radius: 32px;
+            padding: 60px 48px;
+            margin: 40px auto 90px;
+            max-width: 1150px;
+            box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.35);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .calc-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 48px;
+            align-items: center;
+        }
+
+        .calc-info h3 {
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 16px;
+            line-height: 1.3;
+        }
+
+        .calc-info p {
+            color: #94a3b8;
+            font-size: 1.05rem;
+            margin-bottom: 24px;
+        }
+
+        .calc-box {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 24px;
+            padding: 32px;
+        }
+
+        .calc-field {
+            margin-bottom: 18px;
+        }
+
+        .calc-label {
+            display: block;
+            font-size: 0.88rem;
+            font-weight: 600;
+            color: #cbd5e1;
+            margin-bottom: 8px;
+        }
+
+        .calc-input {
+            width: 100%;
+            background: rgba(15, 23, 42, 0.7);
+            border: 1px solid #334155;
+            color: white;
+            padding: 12px 16px;
+            border-radius: 12px;
+            font-size: 1.05rem;
+            font-family: inherit;
+            outline: none;
+            transition: var(--transition);
+        }
+
+        .calc-input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.25);
+        }
+
+        .calc-result {
+            background: rgba(2, 132, 199, 0.15);
+            border: 1px dashed var(--accent);
+            border-radius: 16px;
+            padding: 18px;
+            margin-top: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .calc-res-label {
+            font-size: 0.9rem;
+            color: #cbd5e1;
+        }
+
+        .calc-res-val {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: #38bdf8;
+        }
+
+        /* How it works */
+        .steps-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 32px;
+            position: relative;
+        }
+
+        .step-card {
+            background: white;
+            border-radius: var(--radius-lg);
+            padding: 36px 28px;
+            text-align: center;
+            border: 1px solid var(--gray-200);
+            position: relative;
+        }
+
+        .step-number {
+            width: 48px;
+            height: 48px;
+            background: var(--gradient-primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 1.25rem;
+            margin: 0 auto 20px;
+            box-shadow: 0 6px 14px rgba(2, 132, 199, 0.3);
+        }
+
+        .step-title {
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: var(--dark);
+            margin-bottom: 12px;
+        }
+
+        .step-desc {
+            font-size: 0.94rem;
+            color: var(--gray-600);
+        }
+
+        /* FAQ Accordion */
+        .faq-wrapper {
+            max-width: 800px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .faq-item {
+            background: white;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--gray-200);
+            overflow: hidden;
+            transition: var(--transition);
+        }
+
+        .faq-question {
+            padding: 20px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 1.05rem;
+            color: var(--dark);
+            user-select: none;
+        }
+
+        .faq-icon {
+            font-size: 1.3rem;
+            color: var(--primary);
+            transition: transform 0.3s ease;
+        }
+
+        .faq-item.active .faq-icon {
+            transform: rotate(180deg);
+        }
+
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.35s ease-out, padding 0.35s ease;
+            color: var(--gray-600);
+            font-size: 0.96rem;
+            padding: 0 24px;
+            line-height: 1.7;
+        }
+
+        .faq-item.active .faq-answer {
+            padding: 0 24px 20px;
+            max-height: 200px;
+        }
+
+        /* CTA Section */
+        .cta-banner {
+            background: var(--gradient-water);
+            border-radius: 32px;
+            padding: 64px 32px;
+            text-align: center;
+            color: white;
+            max-width: 1150px;
+            margin: 60px auto 90px;
+            box-shadow: var(--shadow-xl);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-banner h2 {
+            font-size: 2.5rem;
+            font-weight: 900;
+            margin-bottom: 16px;
+        }
+
+        .cta-banner p {
+            font-size: 1.15rem;
+            max-width: 600px;
+            margin: 0 auto 36px;
+            opacity: 0.95;
+        }
+
+        .cta-actions {
+            display: flex;
+            justify-content: center;
+            gap: 18px;
+            flex-wrap: wrap;
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--dark);
+            color: #94a3b8;
+            padding: 70px 24px 30px;
+            border-top: 1px solid #1e293b;
+        }
+
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 48px;
+            padding-bottom: 48px;
+            border-bottom: 1px solid #1e293b;
+        }
+
+        .footer-brand h4 {
+            color: white;
+            font-size: 1.35rem;
+            margin-bottom: 14px;
+            font-weight: 800;
+        }
+
+        .footer-brand p {
+            font-size: 0.92rem;
+            line-height: 1.8;
+            max-width: 360px;
+        }
+
+        .footer-links-title {
+            color: white;
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .footer-links-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .footer-links-list a {
+            color: #94a3b8;
+            text-decoration: none;
+            font-size: 0.92rem;
+            transition: var(--transition);
+        }
+
+        .footer-links-list a:hover {
+            color: white;
+            padding-inline-start: 4px;
+        }
+
+        .footer-bottom {
+            max-width: 1200px;
+            margin: 30px auto 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.88rem;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        /* Responsive */
+        @media (max-width: 960px) {
+            .hero-container {
+                grid-template-columns: 1fr;
+                text-align: center;
+                gap: 56px;
+            }
+            .hero-title {
+                font-size: 2.3rem;
+            }
+            .hero-desc {
+                margin: 0 auto 30px;
+            }
+            .hero-buttons {
+                justify-content: center;
+            }
+            .trust-pills {
+                justify-content: center;
+            }
+            .calc-grid {
+                grid-template-columns: 1fr;
+            }
+            .steps-container {
+                grid-template-columns: 1fr;
+            }
+            .footer-container {
+                grid-template-columns: 1fr;
+                gap: 36px;
+            }
+            .nav-links {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Notification Bar -->
+    <div class="announcement-bar" id="top-bar-text">
+        💧 الإصدار الجديد من تطبيق واما (WAMA) متاح الآن — إدارة ذكية لعدادات المياه بدون إنترنت!
+    </div>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="#" class="brand" id="brand-logo-link">
+                <div class="brand-logo">
+                    <img src="app-icon.png" alt="WAMA Logo" onerror="this.style.display='none'; this.parentElement.innerHTML='💧';">
+                </div>
+                <div class="brand-text">
+                    <span class="brand-name" id="nav-brand-name">واما | WAMA</span>
+                    <span class="brand-tagline" id="nav-brand-tagline">إدارة عدادات المياه والفواتير</span>
+                </div>
+            </a>
+
+            <ul class="nav-links">
+                <li><a href="#features" class="nav-link" id="link-features">المميزات</a></li>
+                <li><a href="#calculator" class="nav-link" id="link-calculator">حاسبة الاستهلاك</a></li>
+                <li><a href="#how-it-works" class="nav-link" id="link-steps">طريقة الاستخدام</a></li>
+                <li><a href="#faq" class="nav-link" id="link-faq">الأسئلة الشائعة</a></li>
+                <li><a href="privacy_policy.html" class="nav-link" id="link-privacy">سياسة الخصوصية</a></li>
+            </ul>
+
+            <div class="nav-actions">
+                <div class="lang-toggle">
+                    <button class="lang-btn active" id="btn-lang-ar" onclick="setLanguage('ar')">عربي</button>
+                    <button class="lang-btn" id="btn-lang-en" onclick="setLanguage('en')">EN</button>
+                </div>
+                <a href="#download" class="btn-nav-download" id="btn-top-download">
+                    <span id="nav-btn-text">تحميل التطبيق</span>
+                    <span>↓</span>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="hero-container">
+            <div class="hero-content">
+                <div class="hero-badge" id="hero-badge">
+                    <span>⚡</span>
+                    <span id="hero-badge-text">أسرع وأدق نظام لحساب فواتير المياه</span>
+                </div>
+                
+                <h1 class="hero-title" id="hero-title">
+                    إدارة ذكية واحترافية <br>
+                    <span class="highlight">لعدادات المياه والفواتير</span>
+                </h1>
+
+                <p class="hero-desc" id="hero-desc">
+                    وداعاً للدفاتر الورقية وحسابات الاستهلاك المعقدة. يتيح لك تطبيق <strong>واما (WAMA)</strong> تسجيل قراءات العدادات، احتساب الفواتير تلقائياً، وإصدار سندات قبض وتقارير PDF أنيقة ومشاركتها مع المستأجرين عبر واتساب بنقرة واحدة — كل ذلك يعمل <strong>بدون إنترنت</strong>!
+                </p>
+
+                <div class="hero-buttons">
+                    <!-- Google Play Button -->
+                    <a href="https://play.google.com/store/apps" target="_blank" rel="noopener noreferrer" class="btn-playstore" id="hero-playstore-btn">
+                        <div class="play-icon">
+                            <svg viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M325.3 234.3L104.6 13l280.8 161.2-60.1 60.1z" fill="#EA4335"/>
+                                <path d="M47 37.1v437.8l240.2-240.2L47 37.1z" fill="#4285F4"/>
+                                <path d="M325.3 277.7l60.1 60.1L104.6 499l220.7-221.3z" fill="#34A853"/>
+                                <path d="M459.7 236.4l-74.3-42.6-60.1 60.1 60.1 60.1 74.3-42.6c18.5-10.6 18.5-24.4 0-35z" fill="#FBBC04"/>
+                            </svg>
+                        </div>
+                        <div class="play-text">
+                            <span class="play-subtitle" id="play-subtitle-1">متاح الآن على</span>
+                            <span class="play-title">Google Play</span>
+                        </div>
+                    </a>
+
+                    <!-- Privacy Policy Button -->
+                    <a href="privacy_policy.html" class="btn-privacy" id="hero-privacy-btn">
+                        <span>🛡️</span>
+                        <span id="hero-privacy-text">سياسة الخصوصية</span>
+                    </a>
+                </div>
+
+                <div class="trust-pills">
+                    <div class="trust-pill">
+                        <span class="trust-pill-icon">✓</span>
+                        <span id="trust-1">يعمل بدون إنترنت (Offline 100%)</span>
+                    </div>
+                    <div class="trust-pill">
+                        <span class="trust-pill-icon">✓</span>
+                        <span id="trust-2">طباعة وتصدير PDF & Excel</span>
+                    </div>
+                    <div class="trust-pill">
+                        <span class="trust-pill-icon">✓</span>
+                        <span id="trust-3">أمان تام وبياناتك على جهازك</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mobile Phone Mockup -->
+            <div class="mockup-wrapper">
+                <div class="floating-badge float-1">
+                    <span style="font-size: 24px;">📊</span>
+                    <div>
+                        <strong style="display:block; font-size: 0.85rem; color: #0f172a;" id="badge-stat-1">استهلاك دقيق</strong>
+                        <span style="font-size: 0.75rem; color: #10b981;">حساب تلقائي 100%</span>
+                    </div>
+                </div>
+
+                <div class="floating-badge float-2">
+                    <span style="font-size: 24px;">📲</span>
+                    <div>
+                        <strong style="display:block; font-size: 0.85rem; color: #0f172a;" id="badge-stat-2">مشاركة واتساب</strong>
+                        <span style="font-size: 0.75rem; color: #0284c7;">إرسال الفاتورة بلحظة</span>
+                    </div>
+                </div>
+
+                <div class="mockup-phone">
+                    <div class="phone-notch"></div>
+                    <div class="screen-content">
+                        <div class="phone-header">
+                            <div>
+                                <span style="font-size: 0.75rem; color: #64748b;">تطبيق واما</span>
+                                <h4 style="font-size: 1rem; color: #0f172a;">عمارة النور - شقة 4</h4>
+                            </div>
+                            <span class="phone-badge">نشط الآن</span>
+                        </div>
+
+                        <div class="phone-card-hero">
+                            <div class="phone-stat-title">إجمالي استهلاك الدورة الحالية</div>
+                            <div class="phone-stat-val">34.5 م³</div>
+                            <div style="font-size: 0.78rem; opacity: 0.9; margin-top: 6px;">قيمة الفاتورة المستحقة: 172.50 ر.س</div>
+                        </div>
+
+                        <div class="phone-card">
+                            <div style="display: flex; justify-content: space-between; font-weight: 700; font-size: 0.85rem; margin-bottom: 10px;">
+                                <span>آخر القراءات والفواتير</span>
+                                <span style="color: #0284c7;">عرض الكل</span>
+                            </div>
+                            
+                            <div class="meter-row">
+                                <div>
+                                    <div style="font-weight: 700;">شقة 1 (أحمد سالم)</div>
+                                    <div style="color: #94a3b8; font-size: 0.72rem;">القراءة: 1,420 م³</div>
+                                </div>
+                                <span class="badge-paid">تم التحصيل</span>
+                            </div>
+
+                            <div class="meter-row">
+                                <div>
+                                    <div style="font-weight: 700;">شقة 2 (خالد المنصور)</div>
+                                    <div style="color: #94a3b8; font-size: 0.72rem;">القراءة: 1,895 م³</div>
+                                </div>
+                                <span class="badge-pending">بانتظار السداد</span>
+                            </div>
+
+                            <div class="meter-row">
+                                <div>
+                                    <div style="font-weight: 700;">شقة 3 (عمر ياسين)</div>
+                                    <div style="color: #94a3b8; font-size: 0.72rem;">القراءة: 2,110 م³</div>
+                                </div>
+                                <span class="badge-paid">تم التحصيل</span>
+                            </div>
+                        </div>
+
+                        <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 12px; padding: 10px; display: flex; align-items: center; gap: 8px;">
+                            <span style="font-size: 16px;">💾</span>
+                            <span style="font-size: 0.75rem; color: #166534; font-weight: 600;">البيانات محفوظة ومؤمنة محلياً</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="section" id="features">
+        <div class="section-header">
+            <span class="section-tag" id="tag-features">مميزات استثنائية</span>
+            <h2 class="section-title" id="title-features">كل ما تحتاجه لإدارة عقاراتك وعداداتك في مكان واحد</h2>
+            <p class="section-desc" id="desc-features">صُمم تطبيق واما خصيصاً لمالكي العقارات ومديري المباني والمستأجرين لتسهيل وتوثيق حسابات استهلاك المياه بكل شفافية ودقة.</p>
+        </div>
+
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon-wrapper">💧</div>
+                <h3 class="feature-title" id="f1-t">إدارة ذكية للعدادات</h3>
+                <p class="feature-desc" id="f1-d">سجّل قراءات العدادات الحالية والسابقة بكل سلاسة مع احتساب فوري لكمية الاستهلاك ومؤشرات تنبيه للأرقام غير المنطقية لمنع أخطاء الإدخال.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon-wrapper">🏢</div>
+                <h3 class="feature-title" id="f2-t">تنظيم العمارات والوحدات</h3>
+                <p class="feature-desc" id="f2-d">قسّم عقاراتك إلى عمارات ووحدات وشقق مخصصة، وأضف بيانات كل مستأجر وربطها بعداد المياه الخاص به لسهولة الفرز والتنظيم.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon-wrapper">📄</div>
+                <h3 class="feature-title" id="f3-t">فواتير وسندات PDF احترافية</h3>
+                <p class="feature-desc" id="f3-d">أنشئ فواتير استهلاك مفصلة وسندات قبض مالية مصممة للطباعة، توضح رسوم المتر، الاستهلاك، والرسوم الإضافية مع أرقام تسلسلية معتمدة.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon-wrapper">💬</div>
+                <h3 class="feature-title" id="f4-t">مشاركة سريعة عبر واتساب</h3>
+                <p class="feature-desc" id="f4-d">أرسل الفاتورة وتفاصيل المستحقات مباشرة إلى واتساب المستأجر أو المالك بنقرة زر واحدة لتسريع عملية التحصيل والشفافية.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon-wrapper">📊</div>
+                <h3 class="feature-title" id="f5-t">تصدير واستيراد Excel</h3>
+                <p class="feature-desc" id="f5-d">تحكم كامل ببياناتك؛ يمكنك تصدير كشوفات الحسابات والقراءات كملفات Excel، أو استيرادها دفعة واحدة لتوفير الوقت والجهد.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon-wrapper">🔒</div>
+                <h3 class="feature-title" id="f6-t">يعمل بدون إنترنت (أمان 100%)</h3>
+                <p class="feature-desc" id="f6-d">قاعدة بياناتك مشفرة ومحفوظة بالكامل داخل جهازك دون أي حاجة لشبكة الإنترنت مع إمكانية عمل نسخ احتياطي آمن واسترجاعه متى شئت.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Interactive Live Demo / Calculator -->
+    <div class="calc-section" id="calculator">
+        <div class="calc-grid">
+            <div class="calc-info">
+                <span style="color: #38bdf8; font-weight: 800; text-transform: uppercase; font-size: 0.88rem; letter-spacing: 1px;" id="calc-badge">تجربة تفاعلية</span>
+                <h3 id="calc-heading">جرّب آلية احتساب الفاتورة لحظياً كما تعمل داخل التطبيق</h3>
+                <p id="calc-sub">أدخل القراءة السابقة والحالية وسعر المتر المكعب للمياه، وشاهد كيف يقوم التطبيق بحساب الفاتورة بدقة متناهية وإظهار المستحقات.</p>
+                
+                <div style="display: flex; gap: 16px; align-items: center; margin-top: 20px;">
+                    <div style="background: rgba(255,255,255,0.08); padding: 12px 20px; border-radius: 14px;">
+                        <span style="font-size: 0.8rem; color: #94a3b8; display: block;">الاستهلاك المحتسب</span>
+                        <strong style="font-size: 1.4rem; color: #38bdf8;" id="live-consumption">25 م³</strong>
+                    </div>
+                    <div style="background: rgba(255,255,255,0.08); padding: 12px 20px; border-radius: 14px;">
+                        <span style="font-size: 0.8rem; color: #94a3b8; display: block;">الإجمالي المستحق</span>
+                        <strong style="font-size: 1.4rem; color: #34d399;" id="live-amount">125.00 ر.س</strong>
+                    </div>
+                </div>
+            </div>
+
+            <div class="calc-box">
+                <div class="calc-field">
+                    <label class="calc-label" for="calc-prev" id="lbl-prev">القراءة السابقة (م³):</label>
+                    <input type="number" id="calc-prev" class="calc-input" value="1200" min="0" oninput="calculateLive()">
+                </div>
+
+                <div class="calc-field">
+                    <label class="calc-label" for="calc-curr" id="lbl-curr">القراءة الحالية (م³):</label>
+                    <input type="number" id="calc-curr" class="calc-input" value="1225" min="0" oninput="calculateLive()">
+                </div>
+
+                <div class="calc-field">
+                    <label class="calc-label" for="calc-price" id="lbl-price">سعر المتر المكعب (ر.س / م³):</label>
+                    <input type="number" id="calc-price" class="calc-input" value="5.0" step="0.5" min="0" oninput="calculateLive()">
+                </div>
+
+                <div class="calc-result">
+                    <span class="calc-res-label" id="calc-res-text">مجموع الفاتورة التقديرية:</span>
+                    <span class="calc-res-val" id="calc-total-display">125.00 ر.س</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- How It Works -->
+    <section class="section" id="how-it-works">
+        <div class="section-header">
+            <span class="section-tag" id="tag-steps">خطوات بسيطة</span>
+            <h2 class="section-title" id="title-steps">كيف يعمل تطبيق واما في 3 خطوات؟</h2>
+            <p class="section-desc" id="desc-steps">واجهة مستخدم مريحة ومصممة لتوفر عليك ساعات من التدقيق الحسابي والمتابعة.</p>
+        </div>
+
+        <div class="steps-container">
+            <div class="step-card">
+                <div class="step-number">1</div>
+                <h3 class="step-title" id="s1-t">أضف المبنى والوحدات</h3>
+                <p class="step-desc" id="s1-d">أنشئ مبانيك ووحداتك السكنية، وحدد أسماء المستأجرين وأرقام عداداتهم وسعر المتر المكعب المعتمد.</p>
+            </div>
+
+            <div class="step-card">
+                <div class="step-number">2</div>
+                <h3 class="step-title" id="s2-t">سجّل قراءة العداد</h3>
+                <p class="step-desc" id="s2-d">أدخل القراءة الجديدة شهرياً أو دورياً؛ التطبيق سيقارنها تلقائياً مع السابقة ويحسب الاستهلاك بدقة.</p>
+            </div>
+
+            <div class="step-card">
+                <div class="step-number">3</div>
+                <h3 class="step-title" id="s3-t">أصدر الفاتورة وشاركها</h3>
+                <p class="step-desc" id="s3-d">أنشئ فاتورة PDF رسمية أو سند قبض، وشاركها مباشرة مع المستأجر عبر واتساب أو اطبعها فوراً.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="section" id="faq">
+        <div class="section-header">
+            <span class="section-tag" id="tag-faq">الأسئلة الشائعة</span>
+            <h2 class="section-title" id="title-faq">إجابات لأهم استفساراتك حول التطبيق</h2>
+            <p class="section-desc" id="desc-faq">كل ما تحتاج معرفته عن الأمان، الخصوصية، والعمل بدون اتصال.</p>
+        </div>
+
+        <div class="faq-wrapper">
+            <div class="faq-item active">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <span id="faq-q1">هل يحتاج تطبيق واما (WAMA) إلى اتصال بالإنترنت؟</span>
+                    <span class="faq-icon">▾</span>
+                </div>
+                <div class="faq-answer" id="faq-a1">
+                    لا، التطبيق مصمم بالكامل بنظام (Offline-First)، مما يعني أن جميع العمليات الحسابية، تخزين القراءات، وإصدار الفواتير تتم محلياً وبشكل فوري على جهازك بدون الحاجة لأي اتصال بالإنترنت.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <span id="faq-q2">أين تُحفظ بيانات العدادات والفواتير؟ وما مدى أمانها؟</span>
+                    <span class="faq-icon">▾</span>
+                </div>
+                <div class="faq-answer" id="faq-a2">
+                    تُحفظ بياناتك محلياً في قاعدة بيانات مشفرة على هاتفك فقط، ولا يمكن لأي طرف ثالث الوصول إليها. يمكنك أيضاً أخذ نسخة احتياطية (Backup) بضغطة زر وتصديرها إلى مجلد آمن على هاتفك أو بريدك.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <span id="faq-q3">هل يمكنني تصدير البيانات إلى جداول Excel؟</span>
+                    <span class="faq-icon">▾</span>
+                </div>
+                <div class="faq-answer" id="faq-a3">
+                    نعم بالتأكيد! يدعم تطبيق واما ميزة تصدير كشوفات الوحدات، القراءات، والفواتير بصيغة Excel لتمكينك من مراجعتها أو طباعتها أو إضافتها لدفاتر الحسابات الخاصة بك بسهولة.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <span id="faq-q4">أين يمكنني مراجعة سياسة الخصوصية الخاصة بالتطبيق؟</span>
+                    <span class="faq-icon">▾</span>
+                </div>
+                <div class="faq-answer" id="faq-a4">
+                    يمكنك الاطلاع على سياسة الخصوصية الرسمية الكاملة باللغتين العربية والإنجليزية في أي وقت عبر الرابط: <a href="privacy_policy.html" style="color: #0284c7; font-weight: 700; text-decoration: underline;">صفحة سياسة الخصوصية الرسمية</a>.
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <div class="cta-banner" id="download">
+        <h2 id="cta-title">ابدأ الآن في تنظيم حسابات المياه بكل راحة وأمان</h2>
+        <p id="cta-desc">حمل تطبيق واما اليوم مجاناً واستمتع بإدارة ذكية لا تحتاج إلى إنترنت، وتخلص من أخطاء الحسابات الورقية إلى الأبد.</p>
+        
+        <div class="cta-actions">
+            <a href="https://play.google.com/store/apps" target="_blank" rel="noopener noreferrer" class="btn-playstore" id="cta-playstore-btn">
+                <div class="play-icon">
+                    <svg viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M325.3 234.3L104.6 13l280.8 161.2-60.1 60.1z" fill="#EA4335"/>
+                        <path d="M47 37.1v437.8l240.2-240.2L47 37.1z" fill="#4285F4"/>
+                        <path d="M325.3 277.7l60.1 60.1L104.6 499l220.7-221.3z" fill="#34A853"/>
+                        <path d="M459.7 236.4l-74.3-42.6-60.1 60.1 60.1 60.1 74.3-42.6c18.5-10.6 18.5-24.4 0-35z" fill="#FBBC04"/>
+                    </svg>
+                </div>
+                <div class="play-text">
+                    <span class="play-subtitle">تحميل مجاني عبر</span>
+                    <span class="play-title">Google Play Store</span>
+                </div>
+            </a>
+
+            <a href="privacy_policy.html" class="btn-privacy" style="color: #0f172a;" id="cta-privacy-btn">
+                <span>🛡️</span>
+                <span>قراءة سياسة الخصوصية</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-brand">
+                <h4>واما (WAMA)</h4>
+                <p id="footer-desc">تطبيقك الأول والذكي لإدارة قراءات عدادات المياه، إصدار الفواتير وسندات القبض، ومشاركتها عبر واتساب بدون إنترنت.</p>
+            </div>
+
+            <div>
+                <h5 class="footer-links-title" id="footer-links-h">روابط سريعة</h5>
+                <ul class="footer-links-list">
+                    <li><a href="#home">الرئيسية</a></li>
+                    <li><a href="#features">المميزات الرئيسية</a></li>
+                    <li><a href="#calculator">حاسبة الاستهلاك</a></li>
+                    <li><a href="#faq">الأسئلة الشائعة</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h5 class="footer-links-title" id="footer-legal-h">الخصوصية والدعم</h5>
+                <ul class="footer-links-list">
+                    <li><a href="privacy_policy.html">سياسة الخصوصية (Privacy Policy)</a></li>
+                    <li><a href="mailto:support@wama-app.com">الدعم الفني: support@wama-app.com</a></li>
+                    <li><a href="https://github.com/Ahmed772142111/water_meter_manager_flutter" target="_blank" rel="noopener noreferrer">المستودع على GitHub</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p>© 2026 تطبيق واما (WAMA). جميع الحقوق محفوظة | All rights reserved.</p>
+            <p>تطوير: <a href="https://github.com/Ahmed772142111" target="_blank" rel="noopener noreferrer" style="color: #38bdf8; text-decoration: none;">Ahmed772142111</a></p>
+        </div>
+    </footer>
+
+    <!-- Interactive Logic -->
+    <script>
+        // FAQ Accordion Toggle
+        function toggleFaq(element) {
+            const item = element.parentElement;
+            const isActive = item.classList.contains('active');
+            
+            // Close all items
+            document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('active'));
+            
+            // Toggle clicked
+            if (!isActive) {
+                item.classList.add('active');
+            }
+        }
+
+        // Live Calculator
+        function calculateLive() {
+            const prev = parseFloat(document.getElementById('calc-prev').value) || 0;
+            const curr = parseFloat(document.getElementById('calc-curr').value) || 0;
+            const price = parseFloat(document.getElementById('calc-price').value) || 0;
+            
+            const diff = Math.max(0, curr - prev);
+            const total = diff * price;
+            
+            const isAr = document.documentElement.getAttribute('dir') === 'rtl';
+            const unit = isAr ? ' م³' : ' m³';
+            const currency = isAr ? ' ر.س' : ' SAR';
+            
+            document.getElementById('live-consumption').innerText = diff.toLocaleString() + unit;
+            document.getElementById('live-amount').innerText = total.toFixed(2) + currency;
+            document.getElementById('calc-total-display').innerText = total.toFixed(2) + currency;
+        }
+
+        // Language Switcher Dictionary
+        const translations = {
+            ar: {
+                dir: 'rtl',
+                topBar: '💧 الإصدار الجديد من تطبيق واما (WAMA) متاح الآن — إدارة ذكية لعدادات المياه بدون إنترنت!',
+                brandName: 'واما | WAMA',
+                brandTagline: 'إدارة عدادات المياه والفواتير',
+                linkFeatures: 'المميزات',
+                linkCalc: 'حاسبة الاستهلاك',
+                linkSteps: 'طريقة الاستخدام',
+                linkFaq: 'الأسئلة الشائعة',
+                linkPrivacy: 'سياسة الخصوصية',
+                navBtnText: 'تحميل التطبيق',
+                heroBadge: 'أسرع وأدق نظام لحساب فواتير المياه',
+                heroTitle: 'إدارة ذكية واحترافية <br><span class="highlight">لعدادات المياه والفواتير</span>',
+                heroDesc: 'وداعاً للدفاتر الورقية وحسابات الاستهلاك المعقدة. يتيح لك تطبيق <strong>واما (WAMA)</strong> تسجيل قراءات العدادات، احتساب الفواتير تلقائياً، وإصدار سندات قبض وتقارير PDF أنيقة ومشاركتها مع المستأجرين عبر واتساب بنقرة واحدة — كل ذلك يعمل <strong>بدون إنترنت</strong>!',
+                playSub: 'متاح الآن على',
+                heroPrivacy: 'سياسة الخصوصية',
+                trust1: 'يعمل بدون إنترنت (Offline 100%)',
+                trust2: 'طباعة وتصدير PDF & Excel',
+                trust3: 'أمان تام وبياناتك على جهازك',
+                badgeStat1: 'استهلاك دقيق',
+                badgeStat2: 'مشاركة واتساب',
+                tagFeatures: 'مميزات استثنائية',
+                titleFeatures: 'كل ما تحتاجه لإدارة عقاراتك وعداداتك في مكان واحد',
+                descFeatures: 'صُمم تطبيق واما خصيصاً لمالكي العقارات ومديري المباني والمستأجرين لتسهيل وتوثيق حسابات استهلاك المياه بكل شفافية ودقة.',
+                f1t: 'إدارة ذكية للعدادات', f1d: 'سجّل قراءات العدادات الحالية والسابقة بكل سلاسة مع احتساب فوري لكمية الاستهلاك ومؤشرات تنبيه للأرقام غير المنطقية لمنع أخطاء الإدخال.',
+                f2t: 'تنظيم العمارات والوحدات', f2d: 'قسّم عقاراتك إلى عمارات ووحدات وشقق مخصصة، وأضف بيانات كل مستأجر وربطها بعداد المياه الخاص به لسهولة الفرز والتنظيم.',
+                f3t: 'فواتير وسندات PDF احترافية', f3d: 'أنشئ فواتير استهلاك مفصلة وسندات قبض مالية مصممة للطباعة، توضح رسوم المتر، الاستهلاك، والرسوم الإضافية مع أرقام تسلسلية معتمدة.',
+                f4t: 'مشاركة سريعة عبر واتساب', f4d: 'أرسل الفاتورة وتفاصيل المستحقات مباشرة إلى واتساب المستأجر أو المالك بنقرة زر واحدة لتسريع عملية التحصيل والشفافية.',
+                f5t: 'تصدير واستيراد Excel', f5d: 'تحكم كامل ببياناتك؛ يمكنك تصدير كشوفات الحسابات والقراءات كملفات Excel، أو استيرادها دفعة واحدة لتوفير الوقت والجهد.',
+                f6t: 'يعمل بدون إنترنت (أمان 100%)', f6d: 'قاعدة بياناتك مشفرة ومحفوظة بالكامل داخل جهازك دون أي حاجة لشبكة الإنترنت مع إمكانية عمل نسخ احتياطي آمن واسترجاعه متى شئت.',
+                calcBadge: 'تجربة تفاعلية',
+                calcHeading: 'جرّب آلية احتساب الفاتورة لحظياً كما تعمل داخل التطبيق',
+                calcSub: 'أدخل القراءة السابقة والحالية وسعر المتر المكعب للمياه، وشاهد كيف يقوم التطبيق بحساب الفاتورة بدقة متناهية وإظهار المستحقات.',
+                lblPrev: 'القراءة السابقة (م³):',
+                lblCurr: 'القراءة الحالية (م³):',
+                lblPrice: 'سعر المتر المكعب (ر.س / م³):',
+                calcResText: 'مجموع الفاتورة التقديرية:',
+                tagSteps: 'خطوات بسيطة',
+                titleSteps: 'كيف يعمل تطبيق واما في 3 خطوات؟',
+                descSteps: 'واجهة مستخدم مريحة ومصممة لتوفر عليك ساعات من التدقيق الحسابي والمتابعة.',
+                s1t: 'أضف المبنى والوحدات', s1d: 'أنشئ مبانيك ووحداتك السكنية، وحدد أسماء المستأجرين وأرقام عداداتهم وسعر المتر المكعب المعتمد.',
+                s2t: 'سجّل قراءة العداد', s2d: 'أدخل القراءة الجديدة شهرياً أو دورياً؛ التطبيق سيقارنها تلقائياً مع السابقة ويحسب الاستهلاك بدقة.',
+                s3t: 'أصدر الفاتورة وشاركها', s3d: 'أنشئ فاتورة PDF رسمية أو سند قبض، وشاركها مباشرة مع المستأجر عبر واتساب أو اطبعها فوراً.',
+                tagFaq: 'الأسئلة الشائعة',
+                titleFaq: 'إجابات لأهم استفساراتك حول التطبيق',
+                descFaq: 'كل ما تحتاج معرفته عن الأمان، الخصوصية، والعمل بدون اتصال.',
+                faqQ1: 'هل يحتاج تطبيق واما (WAMA) إلى اتصال بالإنترنت؟',
+                faqA1: 'لا، التطبيق مصمم بالكامل بنظام (Offline-First)، مما يعني أن جميع العمليات الحسابية، تخزين القراءات، وإصدار الفواتير تتم محلياً وبشكل فوري على جهازك بدون الحاجة لأي اتصال بالإنترنت.',
+                faqQ2: 'أين تُحفظ بيانات العدادات والفواتير؟ وما مدى أمانها؟',
+                faqA2: 'تُحفظ بياناتك محلياً في قاعدة بيانات مشفرة على هاتفك فقط، ولا يمكن لأي طرف ثالث الوصول إليها. يمكنك أيضاً أخذ نسخة احتياطية (Backup) بضغطة زر وتصديرها إلى مجلد آمن على هاتفك أو بريدك.',
+                faqQ3: 'هل يمكنني تصدير البيانات إلى جداول Excel؟',
+                faqA3: 'نعم بالتأكيد! يدعم تطبيق واما ميزة تصدير كشوفات الوحدات، القراءات، والفواتير بصيغة Excel لتمكينك من مراجعتها أو طباعتها أو إضافتها لدفاتر الحسابات الخاصة بك بسهولة.',
+                faqQ4: 'أين يمكنني مراجعة سياسة الخصوصية الخاصة بالتطبيق؟',
+                faqA4: 'يمكنك الاطلاع على سياسة الخصوصية الرسمية الكاملة باللغتين العربية والإنجليزية في أي وقت عبر الرابط: <a href="privacy_policy.html" style="color: #0284c7; font-weight: 700; text-decoration: underline;">صفحة سياسة الخصوصية الرسمية</a>.',
+                ctaTitle: 'ابدأ الآن في تنظيم حسابات المياه بكل راحة وأمان',
+                ctaDesc: 'حمل تطبيق واما اليوم مجاناً واستمتع بإدارة ذكية لا تحتاج إلى إنترنت، وتخلص من أخطاء الحسابات الورقية إلى الأبد.'
+            },
+            en: {
+                dir: 'ltr',
+                topBar: '💧 The all-new WAMA App is here — Smart Water Meter & Billing Management without Internet!',
+                brandName: 'WAMA | Water Manager',
+                brandTagline: 'Utility Meter & Billing Manager',
+                linkFeatures: 'Features',
+                linkCalc: 'Calculator',
+                linkSteps: 'How it Works',
+                linkFaq: 'FAQ',
+                linkPrivacy: 'Privacy Policy',
+                navBtnText: 'Download App',
+                heroBadge: 'Fastest & Most Accurate Meter Billing System',
+                heroTitle: 'Smart & Professional Management for <br><span class="highlight">Water Meters & Invoices</span>',
+                heroDesc: 'Say goodbye to paper logbooks and manual calculations. <strong>WAMA</strong> enables you to record water meter readings, compute consumption, generate professional PDF invoices, and share them via WhatsApp — completely <strong>Offline</strong>!',
+                playSub: 'Get it on',
+                heroPrivacy: 'Privacy Policy',
+                trust1: 'Works 100% Offline',
+                trust2: 'Export PDF & Excel Reports',
+                trust3: 'Safe & Encrypted Local Storage',
+                badgeStat1: 'Accurate Metrics',
+                badgeStat2: 'WhatsApp Share',
+                tagFeatures: 'Key Features',
+                titleFeatures: 'Everything You Need to Manage Your Meters in One Place',
+                descFeatures: 'Designed specifically for landlords, property managers, and tenants to ensure transparent, automated, and error-free utility billing.',
+                f1t: 'Smart Meter Readings', f1d: 'Record current and previous readings seamlessly with instant consumption calculations and anomaly warnings.',
+                f2t: 'Building & Unit Hierarchy', f2d: 'Organize properties into buildings and units, associating each tenant with their assigned meter effortlessly.',
+                f3t: 'Professional PDF Invoices', f3d: 'Generate detailed utility invoices and receipts ready for printing, complete with serial numbers and tariff rates.',
+                f4t: 'One-Click WhatsApp Sharing', f4d: 'Send billing statements and payment requests directly to tenants via WhatsApp in a single tap.',
+                f5t: 'Excel Import & Export', f5d: 'Take full ownership of your data by importing or exporting reading logs and invoices to Excel spreadsheets.',
+                f6t: '100% Offline & Private', f6d: 'Your data is encrypted and stored strictly on your local device without unauthorized cloud transmission.',
+                calcBadge: 'Interactive Demo',
+                calcHeading: 'Try the Live Billing Calculator',
+                calcSub: 'Input the previous reading, current reading, and rate per m³ to see how WAMA computes billing in real-time.',
+                lblPrev: 'Previous Reading (m³):',
+                lblCurr: 'Current Reading (m³):',
+                lblPrice: 'Price per m³ (SAR / m³):',
+                calcResText: 'Estimated Invoice Total:',
+                tagSteps: 'Easy Steps',
+                titleSteps: 'How WAMA Works in 3 Steps',
+                descSteps: 'A clean and intuitive workflow engineered to save you hours of manual accounting.',
+                s1t: 'Add Buildings & Units', s1d: 'Create your apartments, add tenant names, and configure the rate per cubic meter.',
+                s2t: 'Record Meter Readings', s2d: 'Input the new counter reading; the app automatically determines consumption and alerts on inconsistencies.',
+                s3t: 'Generate & Share Invoice', s3d: 'Produce an official PDF invoice or payment receipt and dispatch it straight to WhatsApp.',
+                tagFaq: 'Frequently Asked Questions',
+                titleFaq: 'Got Questions? We Have Answers',
+                descFaq: 'Everything you need to know about security, offline mode, and privacy.',
+                faqQ1: 'Does WAMA require an internet connection?',
+                faqA1: 'No! WAMA is built offline-first. All calculations, database lookups, and invoice generations operate on your local device without needing internet access.',
+                faqQ2: 'Where is my meter and billing data stored?',
+                faqA2: 'Your data is encrypted and stored locally in your phone storage. You can create external backups at any time to export them safely.',
+                faqQ3: 'Can I export my records to Microsoft Excel?',
+                faqA3: 'Yes! WAMA provides one-touch export and import capabilities for Excel spreadsheets for easy auditing and bookkeeping.',
+                faqQ4: 'Where can I read the full Privacy Policy?',
+                faqA4: 'You can review our complete bilingual Privacy Policy anytime at: <a href="privacy_policy.html" style="color: #0284c7; font-weight: 700; text-decoration: underline;">Official Privacy Policy Page</a>.',
+                ctaTitle: 'Start Streamlining Your Water Meter Billing Today',
+                ctaDesc: 'Download WAMA for free and experience smart, offline utility management without bookkeeping hassles.'
+            }
+        };
+
+        function setLanguage(lang) {
+            const t = translations[lang];
+            if (!t) return;
+
+            document.documentElement.setAttribute('dir', t.dir);
+            document.documentElement.setAttribute('lang', lang);
+
+            // Active button
+            document.getElementById('btn-lang-ar').classList.toggle('active', lang === 'ar');
+            document.getElementById('btn-lang-en').classList.toggle('active', lang === 'en');
+
+            // Top Bar & Navbar
+            document.getElementById('top-bar-text').innerHTML = t.topBar;
+            document.getElementById('nav-brand-name').innerText = t.brandName;
+            document.getElementById('nav-brand-tagline').innerText = t.brandTagline;
+            document.getElementById('link-features').innerText = t.linkFeatures;
+            document.getElementById('link-calculator').innerText = t.linkCalc;
+            document.getElementById('link-steps').innerText = t.linkSteps;
+            document.getElementById('link-faq').innerText = t.linkFaq;
+            document.getElementById('link-privacy').innerText = t.linkPrivacy;
+            document.getElementById('nav-btn-text').innerText = t.navBtnText;
+
+            // Hero
+            document.getElementById('hero-badge-text').innerText = t.heroBadge;
+            document.getElementById('hero-title').innerHTML = t.heroTitle;
+            document.getElementById('hero-desc').innerHTML = t.heroDesc;
+            document.getElementById('play-subtitle-1').innerText = t.playSub;
+            document.getElementById('hero-privacy-text').innerText = t.heroPrivacy;
+            document.getElementById('trust-1').innerText = t.trust1;
+            document.getElementById('trust-2').innerText = t.trust2;
+            document.getElementById('trust-3').innerText = t.trust3;
+            document.getElementById('badge-stat-1').innerText = t.badgeStat1;
+            document.getElementById('badge-stat-2').innerText = t.badgeStat2;
+
+            // Features
+            document.getElementById('tag-features').innerText = t.tagFeatures;
+            document.getElementById('title-features').innerText = t.titleFeatures;
+            document.getElementById('desc-features').innerText = t.descFeatures;
+            document.getElementById('f1-t').innerText = t.f1t; document.getElementById('f1-d').innerText = t.f1d;
+            document.getElementById('f2-t').innerText = t.f2t; document.getElementById('f2-d').innerText = t.f2d;
+            document.getElementById('f3-t').innerText = t.f3t; document.getElementById('f3-d').innerText = t.f3d;
+            document.getElementById('f4-t').innerText = t.f4t; document.getElementById('f4-d').innerText = t.f4d;
+            document.getElementById('f5-t').innerText = t.f5t; document.getElementById('f5-d').innerText = t.f5d;
+            document.getElementById('f6-t').innerText = t.f6t; document.getElementById('f6-d').innerText = t.f6d;
+
+            // Calculator
+            document.getElementById('calc-badge').innerText = t.calcBadge;
+            document.getElementById('calc-heading').innerText = t.calcHeading;
+            document.getElementById('calc-sub').innerText = t.calcSub;
+            document.getElementById('lbl-prev').innerText = t.lblPrev;
+            document.getElementById('lbl-curr').innerText = t.lblCurr;
+            document.getElementById('lbl-price').innerText = t.lblPrice;
+            document.getElementById('calc-res-text').innerText = t.calcResText;
+
+            // Steps
+            document.getElementById('tag-steps').innerText = t.tagSteps;
+            document.getElementById('title-steps').innerText = t.titleSteps;
+            document.getElementById('desc-steps').innerText = t.descSteps;
+            document.getElementById('s1-t').innerText = t.s1t; document.getElementById('s1-d').innerText = t.s1d;
+            document.getElementById('s2-t').innerText = t.s2t; document.getElementById('s2-d').innerText = t.s2d;
+            document.getElementById('s3-t').innerText = t.s3t; document.getElementById('s3-d').innerText = t.s3d;
+
+            // FAQ
+            document.getElementById('tag-faq').innerText = t.tagFaq;
+            document.getElementById('title-faq').innerText = t.titleFaq;
+            document.getElementById('desc-faq').innerText = t.descFaq;
+            document.getElementById('faq-q1').innerText = t.faqQ1; document.getElementById('faq-a1').innerHTML = t.faqA1;
+            document.getElementById('faq-q2').innerText = t.faqQ2; document.getElementById('faq-a2').innerHTML = t.faqA2;
+            document.getElementById('faq-q3').innerText = t.faqQ3; document.getElementById('faq-a3').innerHTML = t.faqA3;
+            document.getElementById('faq-q4').innerText = t.faqQ4; document.getElementById('faq-a4').innerHTML = t.faqA4;
+
+            // CTA
+            document.getElementById('cta-title').innerText = t.ctaTitle;
+            document.getElementById('cta-desc').innerText = t.ctaDesc;
+
+            calculateLive();
+        }
+    </script>
+</body>
+</html>
