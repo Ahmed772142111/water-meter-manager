@@ -1,0 +1,3 @@
+# Disable Jekyll for GitHub Pages
+
+This empty file prevents Jekyll build processing. Created to ensure static files are served as-is.
